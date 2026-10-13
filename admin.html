@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal Admin | Mizzelaa & Print x Mizela Design Studio</title>
+  <title>Portal Admin | Mizela Design Studio</title>
   
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,7 +26,7 @@
       <div style="text-align: center; margin-bottom: 24px;">
         <div class="brand-symbol" style="margin: 0 auto 12px auto;">M</div>
         <h2 style="font-size: 1.4rem; font-weight: 800; color: #0f172a;">Portal Admin Percetakan</h2>
-        <p style="font-size: 0.86rem; color: #64748b; margin-top: 4px;">Mizzelaa & Print x Mizela Design Studio</p>
+        <p style="font-size: 0.86rem; color: #64748b; margin-top: 4px;">Mizela Design Studio &bull; Digital Printing Bandung</p>
       </div>
 
       <div class="admin-hint-callout">
@@ -70,9 +70,11 @@
       <!-- Top Bar Admin -->
       <header class="admin-top-nav">
         <div style="display: flex; align-items: center; gap: 14px;">
-          <div class="brand-symbol" style="width: 40px; height: 40px; font-size: 1.2rem;">M</div>
+          <div class="brand-logo-container" id="admin-header-logo-container">
+            <div class="brand-symbol" style="width: 40px; height: 40px; font-size: 1.2rem;">M</div>
+          </div>
           <div>
-            <h2 id="admin-header-title" style="font-size: 1.2rem; font-weight: 800; color: #0f172a; line-height: 1.2;">Mizzelaa & Print &mdash; Panel Admin</h2>
+            <h2 id="admin-header-title" style="font-size: 1.2rem; font-weight: 800; color: #0f172a; line-height: 1.2;">Mizela Design Studio &mdash; Panel Admin</h2>
             <div style="font-size: 0.78rem; color: #64748b;">
               Status: <span class="admin-badge-pill"><i class="fa-solid fa-circle-check"></i> Terautentikasi (<span id="current-username-badge">admin</span>)</span>
             </div>
@@ -317,14 +319,49 @@
           <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 24px;">Perubahan di sini langsung tersinkronisasi ke seluruh halaman website utama (Header, WhatsApp, Alamat & Footer).</p>
 
           <form id="admin-business-form" onsubmit="handleSaveBusinessSettings(event)">
-            <div class="form-field-group">
-              <label class="field-label" for="setting-business-name">Nama Usaha Percetakan</label>
-              <input type="text" id="setting-business-name" class="field-input" placeholder="Mizzelaa & Print" required>
+            
+            <!-- Logo Website Management Section -->
+            <div class="form-field-group" style="background:#f8fafc; padding:18px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:24px;">
+              <label class="field-label" style="font-size:0.95rem; font-weight:700; color:#0f172a; margin-bottom:4px; display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-shapes" style="color:#1d4ed8;"></i> Logo Website (Header & Footer)
+              </label>
+              <p style="font-size:0.82rem; color:#64748b; margin-bottom:14px;">Ganti logo simbol inisial "M" dengan gambar logo usaha Anda sendiri (PNG transparan sangat disarankan).</p>
+              
+              <!-- Logo Preview Box -->
+              <div style="display:flex; align-items:center; gap:16px; margin-bottom:14px;">
+                <div id="admin-logo-preview-box" style="min-width:76px; height:50px; background:#fff; border:1px solid #cbd5e1; border-radius:6px; display:flex; align-items:center; justify-content:center; padding:4px 12px;">
+                  <div class="brand-symbol" style="width:36px; height:36px; font-size:1.1rem;">M</div>
+                </div>
+                <div>
+                  <button type="button" class="btn btn-outline btn-sm" onclick="handleRemoveLogo()" style="color:#dc2626; border-color:#fca5a5; font-size:0.78rem;">
+                    <i class="fa-solid fa-trash-can"></i> Hapus / Gunakan Simbol Inisial "M"
+                  </button>
+                </div>
+              </div>
+
+              <!-- Upload File Logo -->
+              <div class="clean-upload-zone" onclick="document.getElementById('admin-logo-file-picker').click()" style="padding:14px;">
+                <div class="upload-icon-small" style="width:34px; height:34px; font-size:1rem;"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                <div class="upload-main-text" style="font-size:0.86rem;">Klik untuk Unggah File Logo Baru</div>
+                <div class="upload-sub-text" style="font-size:0.75rem;">Format PNG Transparan, JPG, WEBP (Otomatis dioptimasi)</div>
+                <input type="file" id="admin-logo-file-picker" accept="image/*" style="display:none;" onchange="handleAdminLogoFileSelect(event)">
+              </div>
+
+              <!-- URL Logo Alternatif -->
+              <div style="margin-top:10px;">
+                <label class="field-label" for="setting-logo-url" style="font-size:0.8rem;">Atau Masukkan URL Gambar Logo (Alternatif):</label>
+                <input type="url" id="setting-logo-url" class="field-input" placeholder="https://domain.com/logo-mizela.png" oninput="handleLogoUrlInput(this.value)">
+              </div>
             </div>
 
             <div class="form-field-group">
-              <label class="field-label" for="setting-studio-name">Nama Studio Desain</label>
-              <input type="text" id="setting-studio-name" class="field-input" placeholder="Mizela Design Studio" required>
+              <label class="field-label" for="setting-business-name">Nama Usaha / Brand Utama</label>
+              <input type="text" id="setting-business-name" class="field-input" placeholder="Mizela Design Studio" required>
+            </div>
+
+            <div class="form-field-group">
+              <label class="field-label" for="setting-studio-name">Slogan / Keterangan Usaha</label>
+              <input type="text" id="setting-studio-name" class="field-input" placeholder="Digital Printing & Custom Merchandise" required>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">

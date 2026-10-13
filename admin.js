@@ -242,7 +242,7 @@ const INITIAL_PRODUCTS = [
 // Initial Homepage Visuals (Hero image, overlay text, & promo banner)
 const DEFAULT_HOMEPAGE_VISUALS = {
   heroImage: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
-  heroBadgeTitle: "Mizzelaa & Print Workshop",
+  heroBadgeTitle: "Mizela Design Studio Workshop",
   heroBadgeSub: "Jl. Bojongloa, Kopo, Bandung",
   heroBadgeRating: "4.9 / 5.0 (500+ Mitra)",
   promoEnabled: false,
@@ -317,8 +317,9 @@ const INITIAL_GALLERY = [
 
 // Default Business Settings
 const DEFAULT_BUSINESS_SETTINGS = {
-  businessName: "Mizzelaa & Print",
-  studioName: "Mizela Design Studio",
+  businessName: "Mizela Design Studio",
+  studioName: "Digital Printing & Custom Merchandise",
+  logoUrl: "",
   phoneNumber: "0877-2757-7451",
   whatsappNumber: "6287727577451",
   instagramHandle: "@mizela_design_studio",
@@ -339,7 +340,8 @@ let adminState = {
   searchQuery: '',
   tempProductImageBase64: null,
   tempHeroImageBase64: null,
-  tempGalleryImageBase64: null
+  tempGalleryImageBase64: null,
+  tempLogoBase64: null
 };
 
 // ===================================================================
@@ -1079,13 +1081,18 @@ window.resetGalleryToDefault = function() {
 };
 
 // ===================================================================
-// 5. BUSINESS SETTINGS
+// 5. BUSINESS SETTINGS & LOGO WEBSITE
 // ===================================================================
 function initBusinessSettings() {
   const saved = localStorage.getItem('mizzela_business_settings');
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
+      // Auto-migrate legacy name to Mizela Design Studio
+      if (!parsed.businessName || parsed.businessName.includes('Mizzelaa')) {
+        parsed.businessName = "Mizela Design Studio";
+        parsed.studioName = "Digital Printing & Custom Merchandise";
+      }
       adminState.settings = { ...DEFAULT_BUSINESS_SETTINGS, ...parsed };
       return;
     } catch (e) {}
@@ -1096,6 +1103,19 @@ function initBusinessSettings() {
 
 function saveBusinessSettings() {
   localStorage.setItem('mizzela_business_settings', JSON.stringify(adminState.settings));
+}
+
+function updateAdminLogoPreviews() {
+  const previewBox = document.getElementById('admin-logo-preview-box');
+  const topNavLogo = document.getElementById('admin-header-logo-container');
+  const currentLogo = adminState.tempLogoBase64 || adminState.settings.logoUrl;
+
+  const logoHtml = currentLogo
+    ? `<img src="${currentLogo}" alt="Logo" class="brand-logo-img">`
+    : `<div class="brand-symbol" style="width:36px; height:36px; font-size:1.1rem;">M</div>`;
+
+  if (previewBox) previewBox.innerHTML = logoHtml;
+  if (topNavLogo) topNavLogo.innerHTML = logoHtml;
 }
 
 function populateSettingsForm() {
@@ -1111,7 +1131,42 @@ function populateSettingsForm() {
   setVal('setting-instagram', s.instagramHandle);
   setVal('setting-address', s.address);
   setVal('setting-hours', s.operationalHours);
+  setVal('setting-logo-url', s.logoUrl || '');
+
+  updateAdminLogoPreviews();
 }
+
+window.handleAdminLogoFileSelect = function(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    compressImage(e.target.result, 400, 160, 0.85, (compressedBase64) => {
+      adminState.tempLogoBase64 = compressedBase64;
+      updateAdminLogoPreviews();
+      showAdminToast("🖼️ File logo terpilih! Klik 'Simpan Pengaturan Bisnis' untuk menerapkan.");
+    });
+  };
+  reader.readAsDataURL(file);
+};
+
+window.handleLogoUrlInput = function(url) {
+  if (url && url.startsWith('http')) {
+    adminState.tempLogoBase64 = url;
+    updateAdminLogoPreviews();
+  }
+};
+
+window.handleRemoveLogo = function() {
+  adminState.tempLogoBase64 = null;
+  adminState.settings.logoUrl = "";
+  const urlInput = document.getElementById('setting-logo-url');
+  if (urlInput) urlInput.value = "";
+  saveBusinessSettings();
+  updateAdminLogoPreviews();
+  showAdminToast("🔄 Logo direset ke simbol inisial 'M'.");
+};
 
 window.handleSaveBusinessSettings = function(event) {
   event.preventDefault();
@@ -1122,6 +1177,11 @@ window.handleSaveBusinessSettings = function(event) {
   const ig = document.getElementById('setting-instagram').value.trim();
   const address = document.getElementById('setting-address').value.trim();
   const hours = document.getElementById('setting-hours').value.trim();
+  const logoUrlInput = document.getElementById('setting-logo-url').value.trim();
+
+  let finalLogo = adminState.tempLogoBase64 !== null 
+    ? adminState.tempLogoBase64 
+    : (logoUrlInput || adminState.settings.logoUrl || "");
 
   let waClean = phone.replace(/[^0-9]/g, '');
   if (waClean.startsWith('0')) {
@@ -1134,6 +1194,7 @@ window.handleSaveBusinessSettings = function(event) {
   adminState.settings = {
     businessName: bName || DEFAULT_BUSINESS_SETTINGS.businessName,
     studioName: sName || DEFAULT_BUSINESS_SETTINGS.studioName,
+    logoUrl: finalLogo,
     phoneNumber: phone || DEFAULT_BUSINESS_SETTINGS.phoneNumber,
     whatsappNumber: waClean || DEFAULT_BUSINESS_SETTINGS.whatsappNumber,
     instagramHandle: igHandle,
@@ -1143,11 +1204,13 @@ window.handleSaveBusinessSettings = function(event) {
   };
 
   saveBusinessSettings();
+  adminState.tempLogoBase64 = null;
+  updateAdminLogoPreviews();
 
   const titleEl = document.getElementById('admin-header-title');
   if (titleEl) titleEl.innerText = `${adminState.settings.businessName} — Panel Admin`;
 
-  showAdminToast("💾 Pengaturan profil bisnis berhasil disimpan dan langsung aktif di website!");
+  showAdminToast("💾 Profil bisnis & logo website berhasil disimpan dan langsung aktif!");
 };
 
 // ===================================================================

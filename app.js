@@ -8,9 +8,12 @@
 // ===================================================================
 // BUSINESS CONFIGURATION & DATABASE
 // ===================================================================
+// BUSINESS CONFIGURATION & DATABASE
+// ===================================================================
 const CONFIG = {
-  businessName: "Mizzelaa & Print",
-  studioName: "Mizela Design Studio",
+  businessName: "Mizela Design Studio",
+  studioName: "Digital Printing & Custom Merchandise",
+  logoUrl: "",
   instagramHandle: "@mizela_design_studio",
   instagramUrl: "https://instagram.com/mizela_design_studio",
   address: "Jl. Bojongloa, Kopo, Kec. Bojongloa Kaler, Kota Bandung, Jawa Barat 40233",
@@ -24,7 +27,7 @@ const CONFIG = {
 // Default Homepage Visuals (Hero image, overlay text, & promo banner)
 const DEFAULT_HOMEPAGE_VISUALS = {
   heroImage: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
-  heroBadgeTitle: "Mizzelaa & Print Workshop",
+  heroBadgeTitle: "Mizela Design Studio Workshop",
   heroBadgeSub: "Jl. Bojongloa, Kopo, Bandung",
   heroBadgeRating: "4.9 / 5.0 (500+ Mitra)",
   promoEnabled: false,
@@ -520,8 +523,14 @@ function loadBusinessSettings() {
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
+      // Auto-migrate legacy name to Mizela Design Studio
+      if (!parsed.businessName || parsed.businessName.includes('Mizzelaa')) {
+        parsed.businessName = "Mizela Design Studio";
+        parsed.studioName = "Digital Printing & Custom Merchandise";
+      }
       if (parsed.businessName) CONFIG.businessName = parsed.businessName;
       if (parsed.studioName) CONFIG.studioName = parsed.studioName;
+      if (parsed.logoUrl !== undefined) CONFIG.logoUrl = parsed.logoUrl;
       if (parsed.whatsappNumber) CONFIG.whatsappNumber = parsed.whatsappNumber;
       if (parsed.phoneNumber) CONFIG.phoneNumber = parsed.phoneNumber;
       if (parsed.instagramHandle) CONFIG.instagramHandle = parsed.instagramHandle;
@@ -530,17 +539,26 @@ function loadBusinessSettings() {
       if (parsed.operationalHours) CONFIG.operationalHours = parsed.operationalHours;
       applySettingsToDOM();
     } catch (e) {}
+  } else {
+    applySettingsToDOM();
   }
 }
 
 function applySettingsToDOM() {
   // Update brand name
   document.querySelectorAll('.brand-title').forEach(el => {
-    const parts = CONFIG.businessName.split('&');
-    if (parts.length > 1) {
+    if (CONFIG.businessName.includes('&')) {
+      const parts = CONFIG.businessName.split('&');
       el.innerHTML = `${parts[0].trim()} <span>& ${parts[1].trim()}</span>`;
+    } else if (CONFIG.businessName.toLowerCase().includes('design studio')) {
+      el.innerHTML = `Mizela <span>Design Studio</span>`;
     } else {
-      el.innerText = CONFIG.businessName;
+      const words = CONFIG.businessName.split(' ');
+      if (words.length > 1) {
+        el.innerHTML = `${words[0]} <span>${words.slice(1).join(' ')}</span>`;
+      } else {
+        el.innerText = CONFIG.businessName;
+      }
     }
   });
 
@@ -548,6 +566,16 @@ function applySettingsToDOM() {
   document.querySelectorAll('.brand-subtitle').forEach(el => {
     el.innerText = CONFIG.studioName;
   });
+
+  // Update Logo in Header & Footer
+  const headerLogoContainer = document.getElementById('site-header-logo-container');
+  const footerLogoContainer = document.getElementById('site-footer-logo-container');
+  const logoHtml = CONFIG.logoUrl 
+    ? `<img src="${CONFIG.logoUrl}" alt="${CONFIG.businessName}" class="brand-logo-img">` 
+    : `<div class="brand-symbol">M</div>`;
+
+  if (headerLogoContainer) headerLogoContainer.innerHTML = logoHtml;
+  if (footerLogoContainer) footerLogoContainer.innerHTML = logoHtml;
 
   // Update WhatsApp links
   document.querySelectorAll('a[href*="wa.me"]').forEach(el => {
@@ -1285,7 +1313,7 @@ window.submitOrderWhatsApp = function() {
     return `${i + 1}. *${item.name}*%0A   Jumlah: ${item.qty.toLocaleString('id-ID')} ${item.unit} (@ Rp ${formatRupiah(item.unitPrice)})%0A   Subtotal: Rp ${formatRupiah(item.totalPrice)}%0A   Catatan: ${item.notes}`;
   }).join('%0A%0A');
 
-  const text = `Halo Admin Mizzelaa & Print / Mizela Design Studio! 👋%0A%0A` +
+  const text = `Halo Admin Mizela Design Studio! 👋%0A%0A` +
     `Saya ingin konfirmasi pemesanan resmi via website:%0A%0A` +
     `👤 *DATA PEMESAN:*%0A` +
     `• Nama: ${encodeURIComponent(name)}%0A` +
@@ -1301,7 +1329,7 @@ window.submitOrderWhatsApp = function() {
   const waUrl = `https://wa.me/${CONFIG.whatsappNumber}?text=${text}`;
   window.open(waUrl, '_blank');
   closeCheckoutModal();
-  showToast("🚀 Menghubungkan pesanan Anda ke WhatsApp Admin Mizzelaa...");
+  showToast("🚀 Menghubungkan pesanan Anda ke WhatsApp Admin Mizela Design Studio...");
 };
 
 window.printInvoicePreview = function() {
@@ -1328,7 +1356,7 @@ window.printInvoicePreview = function() {
     <!DOCTYPE html>
     <html>
     <head>
-      <title>Nota Pemesanan - Mizzelaa & Print</title>
+      <title>Nota Pemesanan - Mizela Design Studio</title>
       <style>
         body { font-family: sans-serif; padding: 30px; color: #111; }
         .header { display: flex; justify-content: space-between; border-bottom: 2px solid #0f172a; padding-bottom: 15px; }
@@ -1339,8 +1367,8 @@ window.printInvoicePreview = function() {
     <body>
       <div class="header">
         <div>
-          <h2>MIZZELAA & PRINT</h2>
-          <p style="margin:2px 0; color:#555;">Mizela Design Studio</p>
+          <h2>MIZELA DESIGN STUDIO</h2>
+          <p style="margin:2px 0; color:#555;">Digital Printing & Custom Merchandise</p>
           <small>Jl. Bojongloa, Kopo, Bojongloa Kaler, Kota Bandung 40233</small>
         </div>
         <div style="text-align:right;">
@@ -1371,7 +1399,7 @@ window.printInvoicePreview = function() {
       </div>
 
       <div style="margin-top:40px; border-top:1px dashed #aaa; padding-top:15px; font-size:0.85rem; color:#666;">
-        <p>* Nota ini merupakan estimasi resmi pemesanan digital dari website Mizzelaa & Print.</p>
+        <p>* Nota ini merupakan estimasi resmi pemesanan digital dari website Mizela Design Studio.</p>
         <p>* Hubungi WhatsApp: 0877-2757-7451 untuk konfirmasi pembayaran DP & validasi file cetak.</p>
       </div>
       <script>window.print();</script>

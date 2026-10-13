@@ -186,6 +186,18 @@ button, input, select, textarea {
   letter-spacing: -0.5px;
   box-shadow: 0 2px 4px rgba(29, 78, 216, 0.25);
 }
+.brand-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.brand-logo-img {
+  max-height: 44px;
+  max-width: 150px;
+  object-fit: contain;
+  display: block;
+}
 .brand-names {
   display: flex;
   flex-direction: column;
