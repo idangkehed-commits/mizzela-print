@@ -1,0 +1,21 @@
+{
+  "name": "mizzelaa-and-print",
+  "version": "1.0.0",
+  "description": "Website Resmi Mizzelaa & Print - Digital Printing, Sablon Cup, Apparel & Merchandise Benda Datar Bandung",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "digital-printing",
+    "sablon-cup",
+    "sablon-baju",
+    "dtf",
+    "uv-flatbed",
+    "akrilik",
+    "bandung",
+    "mizela-design-studio"
+  ],
+  "author": "Mizzelaa & Print x Mizela Design Studio",
+  "license": "ISC"
+}
