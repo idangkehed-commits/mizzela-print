@@ -14,6 +14,7 @@ const CONFIG = {
   businessName: "Mizela Design Studio",
   studioName: "Digital Printing & Custom Merchandise",
   logoUrl: "",
+  showOrderTracker: false,
   instagramHandle: "@mizela_design_studio",
   instagramUrl: "https://instagram.com/mizela_design_studio",
   address: "Jl. Bojongloa, Kopo, Kec. Bojongloa Kaler, Kota Bandung, Jawa Barat 40233",
@@ -531,6 +532,7 @@ function loadBusinessSettings() {
       if (parsed.businessName) CONFIG.businessName = parsed.businessName;
       if (parsed.studioName) CONFIG.studioName = parsed.studioName;
       if (parsed.logoUrl !== undefined) CONFIG.logoUrl = parsed.logoUrl;
+      CONFIG.showOrderTracker = (parsed.showOrderTracker !== undefined) ? !!parsed.showOrderTracker : false;
       if (parsed.whatsappNumber) CONFIG.whatsappNumber = parsed.whatsappNumber;
       if (parsed.phoneNumber) CONFIG.phoneNumber = parsed.phoneNumber;
       if (parsed.instagramHandle) CONFIG.instagramHandle = parsed.instagramHandle;
@@ -576,6 +578,13 @@ function applySettingsToDOM() {
 
   if (headerLogoContainer) headerLogoContainer.innerHTML = logoHtml;
   if (footerLogoContainer) footerLogoContainer.innerHTML = logoHtml;
+
+  // Toggle Visibility of Lacak Pesanan (Header & Footer)
+  const showTracker = !!CONFIG.showOrderTracker;
+  const navTracker = document.getElementById('nav-item-tracker-wrap');
+  const footerTracker = document.getElementById('footer-item-tracker-wrap');
+  if (navTracker) navTracker.style.display = showTracker ? '' : 'none';
+  if (footerTracker) footerTracker.style.display = showTracker ? '' : 'none';
 
   // Update WhatsApp links
   document.querySelectorAll('a[href*="wa.me"]').forEach(el => {
@@ -635,6 +644,9 @@ function initNavigation() {
 }
 
 window.switchView = function(viewId) {
+  if (viewId === 'tracker' && !CONFIG.showOrderTracker) {
+    viewId = 'home';
+  }
   state.currentView = viewId;
 
   // Update navbar buttons

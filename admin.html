@@ -106,7 +106,7 @@
           <i class="fa-solid fa-camera"></i> Galeri Foto (<span id="stat-total-photos">0</span>)
         </button>
         <button class="admin-tab-btn" data-tab="settings" onclick="switchAdminTab('settings')">
-          <i class="fa-solid fa-shapes"></i> Logo & Profil Bisnis
+          <i class="fa-solid fa-sliders"></i> Logo & Pengaturan Web
         </button>
         <button class="admin-tab-btn" data-tab="security" onclick="switchAdminTab('security')">
           <i class="fa-solid fa-shield-halved"></i> Ganti Password & Akun
@@ -380,6 +380,29 @@
               <div>
                 <label class="field-label" for="setting-logo-url" style="font-size:0.82rem;">Atau Masukkan URL Gambar Logo (Alternatif):</label>
                 <input type="url" id="setting-logo-url" class="field-input" placeholder="https://domain.com/logo-mizela.png" oninput="handleLogoUrlInput(this.value)">
+              </div>
+            </div>
+
+            <!-- Pengaturan Menu & Fitur Website: Lacak Pesanan -->
+            <div class="form-field-group" style="background:#f8fafc; padding:20px; border-radius:8px; border:1px solid #cbd5e1; margin-bottom:24px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
+                <div style="max-width:440px;">
+                  <label for="setting-show-tracker" style="font-size:1rem; font-weight:800; color:#0f172a; margin:0; display:flex; align-items:center; gap:8px; cursor:pointer;">
+                    <i class="fa-solid fa-truck-fast" style="color:#2563eb;"></i> Menu "Lacak Pesanan" di Website
+                  </label>
+                  <p style="font-size:0.84rem; color:#64748b; margin:4px 0 0 0; line-height:1.4;">
+                    Aktifkan atau sembunyikan menu & halaman Lacak Pesanan di Navbar dan Footer website utama.
+                  </p>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <span id="tracker-status-badge" class="admin-badge-pill" style="background:#fee2e2; color:#dc2626; font-size:0.82rem; font-weight:700; padding:6px 12px;">
+                    <i class="fa-solid fa-eye-slash"></i> Disembunyikan (Nonaktif)
+                  </span>
+                  <label class="toggle-switch" title="Geser untuk Mengaktifkan / Menyembunyikan">
+                    <input type="checkbox" id="setting-show-tracker" onchange="handleToggleTrackerStatus(this.checked)">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
               </div>
             </div>
 

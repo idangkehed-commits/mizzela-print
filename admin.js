@@ -320,6 +320,7 @@ const DEFAULT_BUSINESS_SETTINGS = {
   businessName: "Mizela Design Studio",
   studioName: "Digital Printing & Custom Merchandise",
   logoUrl: "",
+  showOrderTracker: false,
   phoneNumber: "0877-2757-7451",
   whatsappNumber: "6287727577451",
   instagramHandle: "@mizela_design_studio",
@@ -1093,6 +1094,9 @@ function initBusinessSettings() {
         parsed.businessName = "Mizela Design Studio";
         parsed.studioName = "Digital Printing & Custom Merchandise";
       }
+      if (parsed.showOrderTracker === undefined) {
+        parsed.showOrderTracker = false;
+      }
       adminState.settings = { ...DEFAULT_BUSINESS_SETTINGS, ...parsed };
       return;
     } catch (e) {}
@@ -1187,6 +1191,31 @@ window.handleSaveLogoModal = function() {
   showAdminToast("🎉 Logo Website berhasil disimpan & diperbarui di seluruh halaman!");
 };
 
+function updateTrackerStatusBadge(isActive) {
+  const badge = document.getElementById('tracker-status-badge');
+  if (!badge) return;
+  if (isActive) {
+    badge.style.background = '#dcfce7';
+    badge.style.color = '#15803d';
+    badge.innerHTML = '<i class="fa-solid fa-eye"></i> Tampil di Website (Aktif)';
+  } else {
+    badge.style.background = '#fee2e2';
+    badge.style.color = '#dc2626';
+    badge.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Disembunyikan (Nonaktif)';
+  }
+}
+
+window.handleToggleTrackerStatus = function(isChecked) {
+  adminState.settings.showOrderTracker = isChecked;
+  updateTrackerStatusBadge(isChecked);
+  saveBusinessSettings();
+  if (isChecked) {
+    showAdminToast("✅ Menu Lacak Pesanan sekarang AKTIF & tampil di website utama.");
+  } else {
+    showAdminToast("👁️‍🗨️ Menu Lacak Pesanan berhasil DISEMBUNYIKAN dari website utama.");
+  }
+};
+
 function populateSettingsForm() {
   const s = adminState.settings;
   const setVal = (id, val) => {
@@ -1201,6 +1230,12 @@ function populateSettingsForm() {
   setVal('setting-address', s.address);
   setVal('setting-hours', s.operationalHours);
   setVal('setting-logo-url', s.logoUrl || '');
+
+  const trackerCheck = document.getElementById('setting-show-tracker');
+  if (trackerCheck) {
+    trackerCheck.checked = !!s.showOrderTracker;
+    updateTrackerStatusBadge(!!s.showOrderTracker);
+  }
 
   updateAdminLogoPreviews();
 }
@@ -1247,6 +1282,8 @@ window.handleSaveBusinessSettings = function(event) {
   const address = document.getElementById('setting-address').value.trim();
   const hours = document.getElementById('setting-hours').value.trim();
   const logoUrlInput = document.getElementById('setting-logo-url').value.trim();
+  const trackerCheck = document.getElementById('setting-show-tracker');
+  const showTracker = trackerCheck ? trackerCheck.checked : false;
 
   let finalLogo = adminState.tempLogoBase64 !== null 
     ? adminState.tempLogoBase64 
@@ -1264,6 +1301,7 @@ window.handleSaveBusinessSettings = function(event) {
     businessName: bName || DEFAULT_BUSINESS_SETTINGS.businessName,
     studioName: sName || DEFAULT_BUSINESS_SETTINGS.studioName,
     logoUrl: finalLogo,
+    showOrderTracker: showTracker,
     phoneNumber: phone || DEFAULT_BUSINESS_SETTINGS.phoneNumber,
     whatsappNumber: waClean || DEFAULT_BUSINESS_SETTINGS.whatsappNumber,
     instagramHandle: igHandle,
@@ -1275,11 +1313,12 @@ window.handleSaveBusinessSettings = function(event) {
   saveBusinessSettings();
   adminState.tempLogoBase64 = null;
   updateAdminLogoPreviews();
+  updateTrackerStatusBadge(showTracker);
 
   const titleEl = document.getElementById('admin-header-title');
   if (titleEl) titleEl.innerText = `${adminState.settings.businessName} — Panel Admin`;
 
-  showAdminToast("💾 Profil bisnis & logo website berhasil disimpan dan langsung aktif!");
+  showAdminToast("💾 Profil bisnis, logo & menu website berhasil disimpan dan langsung aktif!");
 };
 
 // ===================================================================
