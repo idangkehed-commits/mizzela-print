@@ -91,19 +91,200 @@
 
       <!-- Admin Menu Tabs -->
       <div class="admin-menu-tabs">
-        <button class="admin-tab-btn active" data-tab="gallery" onclick="switchAdminTab('gallery')">
-          <i class="fa-solid fa-images"></i> Kelola Galeri Foto (<span id="stat-total-photos">0</span>)
+        <button class="admin-tab-btn active" data-tab="products" onclick="switchAdminTab('products')">
+          <i class="fa-solid fa-box-open"></i> Kelola Produk (<span id="stat-total-products">0</span>)
+        </button>
+        <button class="admin-tab-btn" data-tab="visuals" onclick="switchAdminTab('visuals')">
+          <i class="fa-solid fa-paintbrush"></i> Gambar Beranda
+        </button>
+        <button class="admin-tab-btn" data-tab="gallery" onclick="switchAdminTab('gallery')">
+          <i class="fa-solid fa-camera"></i> Galeri Foto (<span id="stat-total-photos">0</span>)
         </button>
         <button class="admin-tab-btn" data-tab="settings" onclick="switchAdminTab('settings')">
-          <i class="fa-solid fa-sliders"></i> Pengaturan Informasi Bisnis
+          <i class="fa-solid fa-sliders"></i> Informasi Bisnis
         </button>
         <button class="admin-tab-btn" data-tab="security" onclick="switchAdminTab('security')">
           <i class="fa-solid fa-shield-halved"></i> Ganti Password & Akun
         </button>
       </div>
 
-      <!-- PANE 1: KELOLA GALERI FOTO -->
-      <section id="admin-pane-gallery" class="admin-content-pane active">
+      <!-- ===============================================================
+           PANE 1: KELOLA PRODUK & KATALOG (TAMBAH, EDIT, HAPUS, FEATURED)
+           =============================================================== -->
+      <section id="admin-pane-products" class="admin-content-pane active">
+        <div class="admin-panel-card">
+          
+          <!-- Summary Stats -->
+          <div class="admin-stats-bar">
+            <div class="admin-stat-card">
+              <div class="admin-stat-num" id="stat-card-total-prod">0</div>
+              <div class="admin-stat-label">Total Produk</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="admin-stat-num" id="stat-card-featured-prod">0</div>
+              <div class="admin-stat-label">⭐ Produk Unggulan Beranda</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="admin-stat-num" id="stat-card-cup-prod">0</div>
+              <div class="admin-stat-label">Cup Minuman</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="admin-stat-num" id="stat-card-baju-prod">0</div>
+              <div class="admin-stat-label">Sablon Kaos / DTF</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="admin-stat-num" id="stat-card-flat-prod">0</div>
+              <div class="admin-stat-label">Benda Datar & UV</div>
+            </div>
+          </div>
+
+          <!-- Toolbar -->
+          <div class="admin-toolbar-row">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+              <input type="text" id="admin-product-search" class="field-input" placeholder="🔍 Cari nama / bahan produk..." style="width: 260px;" oninput="handleAdminProductSearch(this.value)">
+              <select id="admin-product-cat-filter" class="admin-filter-select" onchange="handleAdminProductCatFilter(this.value)">
+                <option value="all">Semua Kategori</option>
+                <option value="cup">Cup Minuman</option>
+                <option value="baju">Sablon Baju / DTF</option>
+                <option value="flat">Benda Datar & UV</option>
+                <option value="kemasan">Stiker & Kemasan</option>
+              </select>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn btn-outline btn-sm" onclick="resetProductsToDefault()">
+                <i class="fa-solid fa-rotate-left"></i> Reset ke Produk Bawaan
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="openAdminProductModal(null)">
+                <i class="fa-solid fa-plus"></i> + Tambah Produk Baru
+              </button>
+            </div>
+          </div>
+
+          <!-- Product Table List -->
+          <div class="admin-product-table-wrapper">
+            <table class="admin-product-table">
+              <thead>
+                <tr>
+                  <th style="width: 60px;">Foto</th>
+                  <th>Nama & Keterangan Produk</th>
+                  <th>Kategori</th>
+                  <th>Min. Order</th>
+                  <th>Harga Mulai Dari</th>
+                  <th>Unggulan Beranda</th>
+                  <th style="width: 110px; text-align: center;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="admin-products-table-body">
+                <!-- Populated dynamically by admin.js -->
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ===============================================================
+           PANE 2: GAMBAR & TAMPILAN BERANDA (HERO & PROMO BANNER)
+           =============================================================== -->
+      <section id="admin-pane-visuals" class="admin-content-pane">
+        <div style="display: grid; grid-template-columns: 1fr; gap: 24px; max-width: 850px; margin: 0 auto;">
+          
+          <!-- Card 1: Foto Utama Banner Hero Beranda -->
+          <div class="admin-panel-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 14px;">
+              <div>
+                <h3 style="font-size: 1.2rem; font-weight: 700; color: #0f172a;">Foto Workshop Utama di Beranda (Hero Banner)</h3>
+                <p style="font-size: 0.86rem; color: #64748b;">Ganti foto workshop percetakan / mesin cetak yang tampil di bagian atas halaman depan.</p>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="resetHeroVisualsToDefault()">
+                <i class="fa-solid fa-rotate-left"></i> Reset Foto Hero
+              </button>
+            </div>
+
+            <!-- Preview Box -->
+            <div class="admin-visual-preview-box">
+              <img id="admin-hero-preview-img" src="" alt="Preview Hero Banner">
+            </div>
+
+            <form id="admin-hero-visual-form" onsubmit="handleSaveHeroVisuals(event)">
+              <div class="form-field-group">
+                <label class="field-label">Unggah Foto Baru dari Komputer / HP</label>
+                <div class="clean-upload-zone" onclick="document.getElementById('admin-hero-file-picker').click()">
+                  <div class="upload-icon-small"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                  <div class="upload-main-text">Klik untuk Pilih Foto Workshop / Mesin Baru</div>
+                  <div class="upload-sub-text">Format JPG, PNG, WEBP (Otomatis dikompresi agar ringan)</div>
+                  <input type="file" id="admin-hero-file-picker" accept="image/*" style="display:none;" onchange="handleAdminHeroFileSelect(event)">
+                </div>
+              </div>
+
+              <div class="form-field-group">
+                <label class="field-label" for="visual-hero-url">Atau Masukkan URL Gambar (Alternatif)</label>
+                <input type="url" id="visual-hero-url" class="field-input" placeholder="https://images.unsplash.com/..." oninput="handleHeroUrlInput(this.value)">
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="form-field-group">
+                  <label class="field-label" for="visual-hero-badge-title">Judul Badge pada Foto</label>
+                  <input type="text" id="visual-hero-badge-title" class="field-input" placeholder="Mizzelaa & Print Workshop" required>
+                </div>
+                <div class="form-field-group">
+                  <label class="field-label" for="visual-hero-badge-sub">Alamat / Lokasi Badge</label>
+                  <input type="text" id="visual-hero-badge-sub" class="field-input" placeholder="Jl. Bojongloa, Kopo, Bandung" required>
+                </div>
+              </div>
+
+              <div class="form-field-group">
+                <label class="field-label" for="visual-hero-badge-rating">Teks Rating / Testimoni</label>
+                <input type="text" id="visual-hero-badge-rating" class="field-input" placeholder="4.9 / 5.0 (500+ Mitra)" required>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="padding: 12px 24px; font-weight: 700;">
+                <i class="fa-solid fa-floppy-disk"></i> Simpan Gambar & Badge Hero
+              </button>
+            </form>
+          </div>
+
+          <!-- Card 2: Banner Promo / Pengumuman Beranda -->
+          <div class="admin-panel-card">
+            <h3 style="font-size: 1.2rem; font-weight: 700; color: #0f172a; margin-bottom: 6px;">Banner Penawaran Promo Beranda</h3>
+            <p style="font-size: 0.86rem; color: #64748b; margin-bottom: 20px;">Tampilkan kotak penawaran khusus atau diskon cetak partai besar di bawah hero banner beranda.</p>
+
+            <form id="admin-promo-form" onsubmit="handleSavePromoVisuals(event)">
+              <div class="form-field-group">
+                <label style="display: flex; align-items: center; gap: 10px; font-weight: 700; color: #0f172a; cursor: pointer;">
+                  <input type="checkbox" id="visual-promo-enabled" style="width: 18px; height: 18px; accent-color: #1e40af;">
+                  <span>Aktifkan Banner Promo di Halaman Depan</span>
+                </label>
+              </div>
+
+              <div class="form-field-group">
+                <label class="field-label" for="visual-promo-title">Judul Banner Promo</label>
+                <input type="text" id="visual-promo-title" class="field-input" placeholder="Contoh: Diskon Cetak Sablon Cup 15% Bulan Ini!">
+              </div>
+
+              <div class="form-field-group">
+                <label class="field-label" for="visual-promo-sub">Keterangan / Deskripsi Promo</label>
+                <textarea id="visual-promo-sub" class="field-textarea" rows="2" placeholder="Contoh: Dapatkan gratis ongkir pengantaran se-Bandung & gratis mockup desain untuk setiap pemesanan di atas 1.000 pcs."></textarea>
+              </div>
+
+              <div class="form-field-group">
+                <label class="field-label" for="visual-promo-btn-text">Teks Tombol WhatsApp</label>
+                <input type="text" id="visual-promo-btn-text" class="field-input" placeholder="Klaim Promo via WhatsApp">
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="padding: 12px 24px; font-weight: 700;">
+                <i class="fa-solid fa-floppy-disk"></i> Simpan Pengaturan Banner Promo
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ===============================================================
+           PANE 3: KELOLA GALERI FOTO (PORTOFOLIO)
+           =============================================================== -->
+      <section id="admin-pane-gallery" class="admin-content-pane">
         <div class="admin-panel-card">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 24px; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px;">
             <div>
@@ -127,7 +308,9 @@
         </div>
       </section>
 
-      <!-- PANE 2: PENGATURAN INFORMASI BISNIS -->
+      <!-- ===============================================================
+           PANE 4: PENGATURAN INFORMASI BISNIS
+           =============================================================== -->
       <section id="admin-pane-settings" class="admin-content-pane">
         <div class="admin-panel-card" style="max-width: 720px; margin: 0 auto;">
           <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 6px;">Pengaturan Profil Usaha & Kontak</h3>
@@ -173,7 +356,9 @@
         </div>
       </section>
 
-      <!-- PANE 3: GANTI AKUN & PASSWORD -->
+      <!-- ===============================================================
+           PANE 5: GANTI AKUN & PASSWORD
+           =============================================================== -->
       <section id="admin-pane-security" class="admin-content-pane">
         <div class="admin-panel-card" style="max-width: 540px; margin: 0 auto;">
           <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 6px;">Ganti Password & Akun Admin</h3>
@@ -211,7 +396,112 @@
   </div>
 
   <!-- ===================================================================
-       MODAL: UNGGAH FOTO HASIL CETAK DI ADMIN
+       MODAL: TAMBAH & EDIT PRODUK KATALOG / BERANDA
+       =================================================================== -->
+  <div id="admin-product-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 650px;">
+      <div class="modal-head">
+        <h3><i class="fa-solid fa-box-open" style="color: #1d4ed8;"></i> <span id="admin-product-modal-title">Tambah Produk Baru</span></h3>
+        <button class="modal-close-icon" onclick="closeAdminProductModal()">&times;</button>
+      </div>
+      <div class="modal-content-body">
+        <form id="admin-product-form" onsubmit="handleAdminProductSubmit(event)">
+          <input type="hidden" id="prod-form-id" value="">
+
+          <!-- Upload Gambar Produk -->
+          <div class="form-field-group">
+            <label class="field-label">Foto / Gambar Produk</label>
+            <div class="clean-upload-zone" onclick="document.getElementById('prod-file-picker').click()">
+              <div class="upload-icon-small"><i class="fa-solid fa-image"></i></div>
+              <div class="upload-main-text">Klik untuk Pilih File Foto Produk</div>
+              <div class="upload-sub-text">Format JPG, PNG, WEBP (Otomatis dikompres)</div>
+              <input type="file" id="prod-file-picker" accept="image/*" style="display:none;" onchange="handleAdminProductFileSelect(event)">
+            </div>
+            <img id="prod-upload-preview" src="" alt="Preview Produk" style="display:none; max-height:140px; margin:10px auto 0 auto; border-radius:6px; border:1px solid #e2e8f0; object-fit:cover;">
+          </div>
+
+          <div class="form-field-group">
+            <label class="field-label" for="prod-form-img-url">Atau Masukkan URL Gambar (Alternatif)</label>
+            <input type="url" id="prod-form-img-url" class="field-input" placeholder="https://images.unsplash.com/..." oninput="handleProdImgUrlInput(this.value)">
+          </div>
+
+          <!-- Nama & Kategori -->
+          <div class="form-field-group">
+            <label class="field-label" for="prod-form-name">Nama Produk <span style="color:#dc2626;">*</span></label>
+            <input type="text" id="prod-form-name" class="field-input" placeholder="Contoh: Sablon Cup PP 16oz Slim" required>
+          </div>
+
+          <div class="form-field-group">
+            <label class="field-label" for="prod-form-subtitle">Tagline / Subtitle Singkat</label>
+            <input type="text" id="prod-form-subtitle" class="field-input" placeholder="Contoh: Pilihan utama kedai kopi kekinian & boba">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-field-group">
+              <label class="field-label" for="prod-form-cat">Kategori Produk <span style="color:#dc2626;">*</span></label>
+              <select id="prod-form-cat" class="field-select" required>
+                <option value="cup">Cup Minuman</option>
+                <option value="baju">Sablon Baju / DTF</option>
+                <option value="flat">Benda Datar & UV</option>
+                <option value="kemasan">Stiker & Kemasan</option>
+              </select>
+            </div>
+            <div class="form-field-group">
+              <label class="field-label" for="prod-form-unit">Satuan Produk <span style="color:#dc2626;">*</span></label>
+              <input type="text" id="prod-form-unit" class="field-input" placeholder="pcs, meter, roll, lembar A3+" required value="pcs">
+            </div>
+          </div>
+
+          <!-- Harga & Min Qty -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px;">
+            <div class="form-field-group">
+              <label class="field-label" for="prod-form-minqty">Min. Order (Qty) <span style="color:#dc2626;">*</span></label>
+              <input type="number" id="prod-form-minqty" class="field-input" min="1" value="100" required>
+            </div>
+            <div class="form-field-group">
+              <label class="field-label" for="prod-form-baseprice">Harga Satuan Normal (Rp) <span style="color:#dc2626;">*</span></label>
+              <input type="number" id="prod-form-baseprice" class="field-input" min="1" placeholder="Contoh: 650" required>
+            </div>
+            <div class="form-field-group">
+              <label class="field-label" for="prod-form-wholesaleprice">Harga Grosir Termurah (Rp)</label>
+              <input type="number" id="prod-form-wholesaleprice" class="field-input" min="1" placeholder="Contoh: 490">
+            </div>
+          </div>
+
+          <!-- Spesifikasi & Waktu Produksi -->
+          <div class="form-field-group">
+            <label class="field-label" for="prod-form-specs">Spesifikasi Lengkap & Keunggulan</label>
+            <textarea id="prod-form-specs" class="field-textarea" rows="2" placeholder="Contoh: Bahan Plastik PP Food Grade, Tebal 7-8 gram, Sablon 1 warna rekat kuat anti luntur..."></textarea>
+          </div>
+
+          <div class="form-field-group">
+            <label class="field-label" for="prod-form-leadtime">Estimasi Waktu Pengerjaan</label>
+            <input type="text" id="prod-form-leadtime" class="field-input" placeholder="Contoh: 2 - 3 Hari Kerja" value="2 - 3 Hari Kerja">
+          </div>
+
+          <!-- Checkbox Featured di Beranda -->
+          <div class="form-field-group" style="background: #f8fafc; padding: 12px 14px; border-radius: 6px; border: 1px solid #e2e8f0;">
+            <label style="display: flex; align-items: center; gap: 10px; font-weight: 700; color: #0f172a; cursor: pointer; margin: 0;">
+              <input type="checkbox" id="prod-form-featured" style="width: 18px; height: 18px; accent-color: #f59e0b;">
+              <span>⭐ Tampilkan di Produk Unggulan Beranda (Homepage Featured)</span>
+            </label>
+            <span class="field-help" style="margin-left: 28px;">Produk ini akan muncul di bagian teratas Beranda ("Produk Unggulan Produksi Kami").</span>
+          </div>
+
+          <!-- Action Buttons -->
+          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px; border-top:1px solid #e2e8f0; padding-top:16px;">
+            <button type="button" class="btn btn-outline" onclick="closeAdminProductModal()">Batal</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fa-solid fa-floppy-disk"></i> Simpan Produk
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       MODAL: UNGGAH FOTO HASIL CETAK DI ADMIN (GALERI)
        =================================================================== -->
   <div id="admin-add-modal" class="modal-overlay">
     <div class="modal-box" style="max-width: 600px;">

@@ -21,6 +21,18 @@ const CONFIG = {
   operationalHours: "Senin - Sabtu: 08:30 - 20:00 WIB | Minggu: 10:00 - 17:00 WIB"
 };
 
+// Default Homepage Visuals (Hero image, overlay text, & promo banner)
+const DEFAULT_HOMEPAGE_VISUALS = {
+  heroImage: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
+  heroBadgeTitle: "Mizzelaa & Print Workshop",
+  heroBadgeSub: "Jl. Bojongloa, Kopo, Bandung",
+  heroBadgeRating: "4.9 / 5.0 (500+ Mitra)",
+  promoEnabled: false,
+  promoTitle: "Penawaran Spesial Cetak Grosir",
+  promoSubtitle: "Dapatkan gratis ongkir se-Bandung & gratis mockup desain untuk setiap pemesanan di atas 1.000 pcs.",
+  promoButtonText: "Konsultasi via WhatsApp"
+};
+
 // Comprehensive Catalog Data
 const CATALOG_PRODUCTS = [
   // Category: Cup Minuman
@@ -34,6 +46,7 @@ const CATALOG_PRODUCTS = [
     minQty: 500,
     unit: "pcs",
     basePrice: 650,
+    featured: true,
     tiers: [
       { min: 500, max: 999, price: 650 },
       { min: 1000, max: 2999, price: 590 },
@@ -53,6 +66,7 @@ const CATALOG_PRODUCTS = [
     minQty: 500,
     unit: "pcs",
     basePrice: 850,
+    featured: false,
     tiers: [
       { min: 500, max: 999, price: 850 },
       { min: 1000, max: 2999, price: 790 },
@@ -71,6 +85,7 @@ const CATALOG_PRODUCTS = [
     minQty: 300,
     unit: "pcs",
     basePrice: 1450,
+    featured: false,
     tiers: [
       { min: 300, max: 999, price: 1450 },
       { min: 1000, max: 2999, price: 1350 },
@@ -89,6 +104,7 @@ const CATALOG_PRODUCTS = [
     minQty: 1,
     unit: "roll (1000 cup)",
     basePrice: 120000,
+    featured: false,
     tiers: [
       { min: 1, max: 4, price: 120000 },
       { min: 5, max: 9, price: 110000 },
@@ -109,6 +125,7 @@ const CATALOG_PRODUCTS = [
     minQty: 6,
     unit: "pcs",
     basePrice: 72000,
+    featured: true,
     tiers: [
       { min: 6, max: 11, price: 72000 },
       { min: 12, max: 49, price: 67000 },
@@ -128,6 +145,7 @@ const CATALOG_PRODUCTS = [
     minQty: 6,
     unit: "pcs",
     basePrice: 65000,
+    featured: false,
     tiers: [
       { min: 6, max: 11, price: 65000 },
       { min: 12, max: 49, price: 60000 },
@@ -147,6 +165,7 @@ const CATALOG_PRODUCTS = [
     minQty: 6,
     unit: "pcs",
     basePrice: 125000,
+    featured: false,
     tiers: [
       { min: 6, max: 11, price: 125000 },
       { min: 12, max: 49, price: 118000 },
@@ -165,6 +184,7 @@ const CATALOG_PRODUCTS = [
     minQty: 1,
     unit: "meter",
     basePrice: 30000,
+    featured: false,
     tiers: [
       { min: 1, max: 4, price: 30000 },
       { min: 5, max: 19, price: 27000 },
@@ -185,6 +205,7 @@ const CATALOG_PRODUCTS = [
     minQty: 1,
     unit: "pcs",
     basePrice: 85000,
+    featured: true,
     tiers: [
       { min: 1, max: 4, price: 85000 },
       { min: 5, max: 19, price: 78000 },
@@ -203,6 +224,7 @@ const CATALOG_PRODUCTS = [
     minQty: 5,
     unit: "pcs",
     basePrice: 55000,
+    featured: true,
     tiers: [
       { min: 5, max: 19, price: 55000 },
       { min: 20, max: 49, price: 49000 },
@@ -221,6 +243,7 @@ const CATALOG_PRODUCTS = [
     minQty: 2,
     unit: "pcs",
     basePrice: 35000,
+    featured: false,
     tiers: [
       { min: 2, max: 9, price: 35000 },
       { min: 10, max: 49, price: 30000 },
@@ -241,6 +264,7 @@ const CATALOG_PRODUCTS = [
     minQty: 5,
     unit: "lembar A3+",
     basePrice: 15000,
+    featured: false,
     tiers: [
       { min: 5, max: 19, price: 15000 },
       { min: 20, max: 49, price: 13000 },
@@ -250,6 +274,20 @@ const CATALOG_PRODUCTS = [
     productionDays: "1 - 2 Hari Kerja"
   }
 ];
+
+// Helper: Get catalog products from localStorage or default
+function getCatalogProducts() {
+  const saved = localStorage.getItem('mizzela_catalog_products');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    } catch (e) {}
+  }
+  return CATALOG_PRODUCTS;
+}
 
 // Order Tracking Mock Database (Demo orders for real customer experience)
 const MOCK_ORDERS = {
@@ -379,6 +417,8 @@ let state = {
 // ===================================================================
 document.addEventListener('DOMContentLoaded', () => {
   loadBusinessSettings();
+  loadHomepageVisuals();
+  renderHomeFeaturedProducts();
   initOperationalStatus();
   initNavigation();
   initCatalogView();
@@ -386,6 +426,94 @@ document.addEventListener('DOMContentLoaded', () => {
   initGalleryView();
   initCart();
 });
+
+// Load Homepage Visuals from localStorage or fallback
+function loadHomepageVisuals() {
+  let visuals = DEFAULT_HOMEPAGE_VISUALS;
+  const saved = localStorage.getItem('mizzela_homepage_visuals');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      visuals = { ...DEFAULT_HOMEPAGE_VISUALS, ...parsed };
+    } catch (e) {}
+  }
+
+  const heroImg = document.getElementById('hero-banner-img');
+  if (heroImg && visuals.heroImage) heroImg.src = visuals.heroImage;
+
+  const heroTitle = document.getElementById('hero-badge-title');
+  if (heroTitle && visuals.heroBadgeTitle) heroTitle.innerText = visuals.heroBadgeTitle;
+
+  const heroSub = document.getElementById('hero-badge-sub');
+  if (heroSub && visuals.heroBadgeSub) heroSub.innerText = visuals.heroBadgeSub;
+
+  const heroRating = document.getElementById('hero-badge-rating');
+  if (heroRating && visuals.heroBadgeRating) {
+    heroRating.innerHTML = `<i class="fa-solid fa-star"></i> ${visuals.heroBadgeRating}`;
+  }
+
+  // Home Promo Banner
+  const promoWrap = document.getElementById('home-promo-banner');
+  if (promoWrap) {
+    if (visuals.promoEnabled) {
+      promoWrap.style.display = 'block';
+      promoWrap.innerHTML = `
+        <div class="home-promo-banner-card">
+          <div>
+            <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(255,255,255,0.2); display: inline-block; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; font-weight: 700;">
+              <i class="fa-solid fa-bullhorn"></i> Informasi & Promo Spesial
+            </div>
+            <h3>${visuals.promoTitle || 'Promo Menarik Percetakan Mizzelaa'}</h3>
+            <p>${visuals.promoSubtitle || 'Hubungi WhatsApp kami untuk konsultasi sampel gratis dan potongan harga khusus partai besar.'}</p>
+          </div>
+          <a href="https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent('Halo Mizzelaa, saya ingin konsultasi penawaran cetak promo.')}" target="_blank" class="home-promo-banner-btn">
+            <i class="fa-brands fa-whatsapp"></i> ${visuals.promoButtonText || 'Klaim Promo via WhatsApp'}
+          </a>
+        </div>
+      `;
+    } else {
+      promoWrap.style.display = 'none';
+    }
+  }
+}
+
+// Render Featured Products dynamically on Beranda
+function renderHomeFeaturedProducts() {
+  const container = document.getElementById('home-featured-products-grid');
+  if (!container) return;
+
+  const allProducts = getCatalogProducts();
+  let featured = allProducts.filter(p => p.featured === true);
+  if (featured.length === 0) {
+    featured = allProducts.slice(0, 4);
+  }
+
+  container.innerHTML = featured.map(p => {
+    const lowestPrice = (p.tiers && p.tiers.length > 0) 
+      ? p.tiers[p.tiers.length - 1].price 
+      : p.basePrice;
+
+    return `
+      <div class="product-item-card">
+        <div class="product-img-holder">
+          <span class="product-cat-chip">${p.categoryName || 'Percetakan'}</span>
+          <img src="${p.image}" alt="${p.name}" loading="lazy">
+        </div>
+        <div class="product-body-content">
+          <h4 class="product-title">${p.name}</h4>
+          <p class="product-spec-bullet">${p.subtitle || p.specs || ''}</p>
+          <div class="product-price-section">
+            <div>
+              <div class="price-unit-label">Mulai dari:</div>
+              <div class="price-unit-number">Rp ${formatRupiah(lowestPrice)} <span style="font-size:0.75rem; font-weight:normal; color:#64748b;">/ ${p.unit}</span></div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openProductDetailModal('${p.id}')">Pesan Sekarang</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
 
 function loadBusinessSettings() {
   const saved = localStorage.getItem('mizzela_business_settings');
@@ -504,6 +632,14 @@ window.switchView = function(viewId) {
     targetPane.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  // Refresh dynamic content when views switch
+  if (viewId === 'home') {
+    loadHomepageVisuals();
+    renderHomeFeaturedProducts();
+  } else if (viewId === 'catalog') {
+    renderCatalogProducts('all');
+  }
 };
 
 // ===================================================================
@@ -535,41 +671,59 @@ function renderCatalogProducts(catFilter) {
   const container = document.getElementById('catalog-products-list');
   if (!container) return;
 
-  const items = catFilter === 'all' 
-    ? CATALOG_PRODUCTS 
-    : CATALOG_PRODUCTS.filter(p => p.category === catFilter);
+  const allProducts = getCatalogProducts();
+  const items = (!catFilter || catFilter === 'all') 
+    ? allProducts 
+    : allProducts.filter(p => p.category === catFilter);
 
-  container.innerHTML = items.map(p => `
-    <div class="product-item-card">
-      <div class="product-img-holder">
-        <span class="product-cat-chip">${p.categoryName}</span>
-        <img src="${p.image}" alt="${p.name}" loading="lazy">
+  if (items.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;">
+        <p style="color: #64748b; font-size: 0.95rem;">Belum ada produk untuk kategori ini. Tambahkan produk melalui Portal Admin.</p>
       </div>
-      <div class="product-body-content">
-        <h4 class="product-title">${p.name}</h4>
-        <p class="product-spec-bullet">${p.subtitle}. Min. order ${p.minQty} ${p.unit}.</p>
-        <div class="product-price-section">
-          <div>
-            <div class="price-unit-label">Mulai dari:</div>
-            <div class="price-unit-number">Rp ${formatRupiah(p.tiers[p.tiers.length - 1].price)} <span style="font-size:0.75rem; font-weight:normal; color:#64748b;">/${p.unit}</span></div>
+    `;
+    return;
+  }
+
+  container.innerHTML = items.map(p => {
+    const lowestPrice = (p.tiers && p.tiers.length > 0) 
+      ? p.tiers[p.tiers.length - 1].price 
+      : p.basePrice;
+
+    return `
+      <div class="product-item-card">
+        <div class="product-img-holder">
+          <span class="product-cat-chip">${p.categoryName || 'Percetakan'}</span>
+          <img src="${p.image}" alt="${p.name}" loading="lazy">
+        </div>
+        <div class="product-body-content">
+          <h4 class="product-title">${p.name}</h4>
+          <p class="product-spec-bullet">${p.subtitle || ''}. Min. order ${p.minQty} ${p.unit}.</p>
+          <div class="product-price-section">
+            <div>
+              <div class="price-unit-label">Mulai dari:</div>
+              <div class="price-unit-number">Rp ${formatRupiah(lowestPrice)} <span style="font-size:0.75rem; font-weight:normal; color:#64748b;">/${p.unit}</span></div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openProductDetailModal('${p.id}')">
+              Detail & Pesan
+            </button>
           </div>
-          <button class="btn btn-primary btn-sm" onclick="openProductDetailModal('${p.id}')">
-            Detail & Pesan
-          </button>
         </div>
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 function filterCatalogSearch(query) {
   const container = document.getElementById('catalog-products-list');
   if (!container) return;
 
-  const filtered = CATALOG_PRODUCTS.filter(p => 
+  const allProducts = getCatalogProducts();
+  const filtered = allProducts.filter(p => 
     p.name.toLowerCase().includes(query) || 
-    p.categoryName.toLowerCase().includes(query) ||
-    p.specs.toLowerCase().includes(query)
+    (p.categoryName && p.categoryName.toLowerCase().includes(query)) ||
+    (p.specs && p.specs.toLowerCase().includes(query)) ||
+    (p.subtitle && p.subtitle.toLowerCase().includes(query))
   );
 
   if (filtered.length === 0) {
@@ -581,31 +735,38 @@ function filterCatalogSearch(query) {
     return;
   }
 
-  container.innerHTML = filtered.map(p => `
-    <div class="product-item-card">
-      <div class="product-img-holder">
-        <span class="product-cat-chip">${p.categoryName}</span>
-        <img src="${p.image}" alt="${p.name}">
-      </div>
-      <div class="product-body-content">
-        <h4 class="product-title">${p.name}</h4>
-        <p class="product-spec-bullet">${p.subtitle}</p>
-        <div class="product-price-section">
-          <div>
-            <div class="price-unit-label">Mulai dari:</div>
-            <div class="price-unit-number">Rp ${formatRupiah(p.tiers[p.tiers.length - 1].price)} / ${p.unit}</div>
+  container.innerHTML = filtered.map(p => {
+    const lowestPrice = (p.tiers && p.tiers.length > 0) 
+      ? p.tiers[p.tiers.length - 1].price 
+      : p.basePrice;
+
+    return `
+      <div class="product-item-card">
+        <div class="product-img-holder">
+          <span class="product-cat-chip">${p.categoryName || 'Percetakan'}</span>
+          <img src="${p.image}" alt="${p.name}">
+        </div>
+        <div class="product-body-content">
+          <h4 class="product-title">${p.name}</h4>
+          <p class="product-spec-bullet">${p.subtitle || ''}</p>
+          <div class="product-price-section">
+            <div>
+              <div class="price-unit-label">Mulai dari:</div>
+              <div class="price-unit-number">Rp ${formatRupiah(lowestPrice)} / ${p.unit}</div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openProductDetailModal('${p.id}')">
+              Detail & Pesan
+            </button>
           </div>
-          <button class="btn btn-primary btn-sm" onclick="openProductDetailModal('${p.id}')">
-            Detail & Pesan
-          </button>
         </div>
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 window.openProductDetailModal = function(productId) {
-  const product = CATALOG_PRODUCTS.find(p => p.id === productId);
+  const allProducts = getCatalogProducts();
+  const product = allProducts.find(p => p.id === productId);
   if (!product) return;
 
   state.selectedCatalogProduct = product;

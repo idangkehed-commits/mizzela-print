@@ -125,19 +125,22 @@
             </div>
           </div>
           <div class="hero-banner-image">
-            <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80" alt="Workshop Digital Printing Mizzelaa">
+            <img id="hero-banner-img" src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80" alt="Workshop Digital Printing Mizzelaa">
             <div class="hero-image-overlay-box">
               <div>
-                <div class="overlay-box-title">Mizzelaa & Print Workshop</div>
-                <div class="overlay-box-sub">Jl. Bojongloa, Kopo, Bandung</div>
+                <div class="overlay-box-title" id="hero-badge-title">Mizzelaa & Print Workshop</div>
+                <div class="overlay-box-sub" id="hero-badge-sub">Jl. Bojongloa, Kopo, Bandung</div>
               </div>
-              <div class="overlay-rating-stars">
+              <div class="overlay-rating-stars" id="hero-badge-rating">
                 <i class="fa-solid fa-star"></i> 4.9 / 5.0 (500+ Mitra)
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      <!-- Dynamic Promo Banner on Beranda (Controlled by Admin) -->
+      <div id="home-promo-banner" style="display: none;"></div>
 
       <!-- Quick Category Navigation -->
       <section>
@@ -176,7 +179,7 @@
         </div>
       </section>
 
-      <!-- Featured Best-Seller Products -->
+      <!-- Featured Best-Seller Products (Controlled by Admin) -->
       <section style="margin-bottom: 50px;">
         <div class="section-head" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px;">
           <div>
@@ -189,83 +192,8 @@
           </button>
         </div>
 
-        <div class="products-grid-clean">
-          <!-- Featured 1: Cup PP 16oz -->
-          <div class="product-item-card">
-            <div class="product-img-holder">
-              <span class="product-cat-chip">Cup Minuman</span>
-              <img src="https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80" alt="Sablon Cup PP 16oz Slim">
-            </div>
-            <div class="product-body-content">
-              <h4 class="product-title">Sablon Cup PP 16oz Slim</h4>
-              <p class="product-spec-bullet">Paling laris untuk es kopi susu. Tinta tebal rekat anti kelupas saat kena es dingin.</p>
-              <div class="product-price-section">
-                <div>
-                  <div class="price-unit-label">Mulai dari:</div>
-                  <div class="price-unit-number">Rp 490 <span style="font-size:0.75rem; font-weight:normal; color:#64748b;">/ pcs</span></div>
-                </div>
-                <button class="btn btn-primary btn-sm" onclick="openProductDetailModal('prod-cup-pp16')">Pesan Sekarang</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Featured 2: Kaos Combed 24s -->
-          <div class="product-item-card">
-            <div class="product-img-holder">
-              <span class="product-cat-chip">Sablon Baju</span>
-              <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80" alt="Kaos Combed 24s + DTF">
-            </div>
-            <div class="product-body-content">
-              <h4 class="product-title">Kaos Combed 24s + DTF A3</h4>
-              <p class="product-spec-bullet">Bahan 100% katun reaktif tebal standar clothing line distro. Sablon DTF tahan cuci.</p>
-              <div class="product-price-section">
-                <div>
-                  <div class="price-unit-label">Mulai dari:</div>
-                  <div class="price-unit-number">Rp 58.000 <span style="font-size:0.75rem; font-weight:normal; color:#64748b;">/ pcs</span></div>
-                </div>
-                <button class="btn btn-primary btn-sm" onclick="openProductDetailModal('prod-kaos-combed24s')">Pesan Sekarang</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Featured 3: Plakat Akrilik -->
-          <div class="product-item-card">
-            <div class="product-img-holder">
-              <span class="product-cat-chip">Benda Datar & UV</span>
-              <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80" alt="Plakat Akrilik Stand Kayu">
-            </div>
-            <div class="product-body-content">
-              <h4 class="product-title">Plakat Akrilik 15x20cm Stand Kayu</h4>
-              <p class="product-spec-bullet">Akrilik 5mm laser cut dengan cetak UV timbul bertekstur dan dudukan kayu jati belanda.</p>
-              <div class="product-price-section">
-                <div>
-                  <div class="price-unit-label">Mulai dari:</div>
-                  <div class="price-unit-number">Rp 68.000 <span style="font-size:0.75rem; font-weight:normal; color:#64748b;">/ pcs</span></div>
-                </div>
-                <button class="btn btn-primary btn-sm" onclick="openProductDetailModal('prod-plakat-akrilik')">Pesan Sekarang</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Featured 4: Tumbler UV -->
-          <div class="product-item-card">
-            <div class="product-img-holder">
-              <span class="product-cat-chip">Benda Datar & UV</span>
-              <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80" alt="Tumbler Stainless Vacuum UV">
-            </div>
-            <div class="product-body-content">
-              <h4 class="product-title">Tumbler Stainless Vacuum 500ml UV</h4>
-              <p class="product-spec-bullet">Botol minum tahan dingin/panas 12 jam dengan cetak UV keliling anti luntur.</p>
-              <div class="product-price-section">
-                <div>
-                  <div class="price-unit-label">Mulai dari:</div>
-                  <div class="price-unit-number">Rp 44.000 <span style="font-size:0.75rem; font-weight:normal; color:#64748b;">/ pcs</span></div>
-                </div>
-                <button class="btn btn-primary btn-sm" onclick="openProductDetailModal('prod-tumbler-uv')">Pesan Sekarang</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <!-- Rendered Dynamically by app.js from getCatalogProducts() -->
+        <div class="products-grid-clean" id="home-featured-products-grid"></div>
       </section>
 
       <!-- Three Pillars of Quality -->
