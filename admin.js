@@ -1108,6 +1108,8 @@ function saveBusinessSettings() {
 function updateAdminLogoPreviews() {
   const previewBox = document.getElementById('admin-logo-preview-box');
   const topNavLogo = document.getElementById('admin-header-logo-container');
+  const visualsPreview = document.getElementById('admin-visuals-logo-preview');
+  const modalPreview = document.getElementById('modal-logo-preview');
   const currentLogo = adminState.tempLogoBase64 || adminState.settings.logoUrl;
 
   const logoHtml = currentLogo
@@ -1116,7 +1118,74 @@ function updateAdminLogoPreviews() {
 
   if (previewBox) previewBox.innerHTML = logoHtml;
   if (topNavLogo) topNavLogo.innerHTML = logoHtml;
+  if (visualsPreview) visualsPreview.innerHTML = logoHtml;
+  if (modalPreview) modalPreview.innerHTML = logoHtml;
 }
+
+window.openAdminLogoModal = function() {
+  const modal = document.getElementById('admin-logo-modal');
+  const urlInput = document.getElementById('modal-logo-url');
+  if (urlInput) {
+    urlInput.value = adminState.settings.logoUrl || '';
+  }
+  updateAdminLogoPreviews();
+  if (modal) modal.classList.add('active');
+};
+
+window.closeAdminLogoModal = function() {
+  const modal = document.getElementById('admin-logo-modal');
+  if (modal) modal.classList.remove('active');
+};
+
+window.handleModalLogoFileSelect = function(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    compressImage(e.target.result, 400, 160, 0.85, (compressedBase64) => {
+      adminState.tempLogoBase64 = compressedBase64;
+      updateAdminLogoPreviews();
+      showAdminToast("🖼️ File logo terpilih! Klik 'Simpan & Terapkan Logo' untuk menyimpan.");
+    });
+  };
+  reader.readAsDataURL(file);
+};
+
+window.handleModalLogoUrlInput = function(url) {
+  if (url && url.startsWith('http')) {
+    adminState.tempLogoBase64 = url;
+    updateAdminLogoPreviews();
+  }
+};
+
+window.handleRemoveLogoInModal = function() {
+  adminState.tempLogoBase64 = null;
+  adminState.settings.logoUrl = "";
+  const urlInput = document.getElementById('modal-logo-url');
+  if (urlInput) urlInput.value = "";
+  const settingUrlInput = document.getElementById('setting-logo-url');
+  if (settingUrlInput) settingUrlInput.value = "";
+  saveBusinessSettings();
+  updateAdminLogoPreviews();
+  showAdminToast("🔄 Logo direset ke simbol inisial 'M'.");
+};
+
+window.handleSaveLogoModal = function() {
+  const urlInput = document.getElementById('modal-logo-url');
+  const enteredUrl = urlInput ? urlInput.value.trim() : '';
+
+  let finalLogo = adminState.tempLogoBase64 !== null 
+    ? adminState.tempLogoBase64 
+    : (enteredUrl || adminState.settings.logoUrl || "");
+
+  adminState.settings.logoUrl = finalLogo;
+  adminState.tempLogoBase64 = null;
+  saveBusinessSettings();
+  updateAdminLogoPreviews();
+  closeAdminLogoModal();
+  showAdminToast("🎉 Logo Website berhasil disimpan & diperbarui di seluruh halaman!");
+};
 
 function populateSettingsForm() {
   const s = adminState.settings;

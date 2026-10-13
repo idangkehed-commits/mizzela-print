@@ -70,7 +70,7 @@
       <!-- Top Bar Admin -->
       <header class="admin-top-nav">
         <div style="display: flex; align-items: center; gap: 14px;">
-          <div class="brand-logo-container" id="admin-header-logo-container">
+          <div class="brand-logo-container" id="admin-header-logo-container" onclick="openAdminLogoModal()" style="cursor: pointer;" title="Klik untuk Ganti Logo Website">
             <div class="brand-symbol" style="width: 40px; height: 40px; font-size: 1.2rem;">M</div>
           </div>
           <div>
@@ -82,6 +82,9 @@
         </div>
 
         <div style="display: flex; align-items: center; gap: 10px;">
+          <button type="button" class="btn btn-primary btn-sm" onclick="openAdminLogoModal()" style="background: #2563eb; color: #fff; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(37,99,235,0.25);">
+            <i class="fa-solid fa-shapes"></i> Ganti Logo Web
+          </button>
           <a href="index.html" target="_blank" class="btn btn-outline btn-sm">
             <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Website Utama
           </a>
@@ -103,7 +106,7 @@
           <i class="fa-solid fa-camera"></i> Galeri Foto (<span id="stat-total-photos">0</span>)
         </button>
         <button class="admin-tab-btn" data-tab="settings" onclick="switchAdminTab('settings')">
-          <i class="fa-solid fa-sliders"></i> Informasi Bisnis
+          <i class="fa-solid fa-shapes"></i> Logo & Profil Bisnis
         </button>
         <button class="admin-tab-btn" data-tab="security" onclick="switchAdminTab('security')">
           <i class="fa-solid fa-shield-halved"></i> Ganti Password & Akun
@@ -191,6 +194,24 @@
       <section id="admin-pane-visuals" class="admin-content-pane">
         <div style="display: grid; grid-template-columns: 1fr; gap: 24px; max-width: 850px; margin: 0 auto;">
           
+          <!-- Card 0: Logo Website (Header & Footer) Quick Access -->
+          <div class="admin-panel-card" style="border-left: 4px solid #2563eb; background: #f8fafc;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div id="admin-visuals-logo-preview" style="min-width: 65px; height: 46px; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; display: flex; align-items: center; justify-content: center; padding: 4px 10px;">
+                  <div class="brand-symbol" style="width: 32px; height: 32px; font-size: 1rem;">M</div>
+                </div>
+                <div>
+                  <h3 style="font-size: 1.12rem; font-weight: 700; color: #0f172a; margin-bottom: 2px;">Logo Website (Header & Footer)</h3>
+                  <p style="font-size: 0.84rem; color: #64748b; margin: 0;">Ganti simbol inisial "M" dengan file logo grafis / PNG transparan Mizela Design Studio.</p>
+                </div>
+              </div>
+              <button type="button" class="btn btn-primary btn-sm" onclick="openAdminLogoModal()" style="background: #2563eb; font-weight: 700;">
+                <i class="fa-solid fa-camera"></i> Ganti Logo Sekarang
+              </button>
+            </div>
+          </div>
+
           <!-- Card 1: Foto Utama Banner Hero Beranda -->
           <div class="admin-panel-card">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 14px;">
@@ -311,45 +332,53 @@
       </section>
 
       <!-- ===============================================================
-           PANE 4: PENGATURAN INFORMASI BISNIS
+           PANE 4: PENGATURAN INFORMASI BISNIS & LOGO
            =============================================================== -->
       <section id="admin-pane-settings" class="admin-content-pane">
         <div class="admin-panel-card" style="max-width: 720px; margin: 0 auto;">
-          <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 6px;">Pengaturan Profil Usaha & Kontak</h3>
+          <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 6px;">Pengaturan Logo & Profil Usaha</h3>
           <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 24px;">Perubahan di sini langsung tersinkronisasi ke seluruh halaman website utama (Header, WhatsApp, Alamat & Footer).</p>
 
           <form id="admin-business-form" onsubmit="handleSaveBusinessSettings(event)">
             
             <!-- Logo Website Management Section -->
-            <div class="form-field-group" style="background:#f8fafc; padding:18px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:24px;">
-              <label class="field-label" style="font-size:0.95rem; font-weight:700; color:#0f172a; margin-bottom:4px; display:flex; align-items:center; gap:8px;">
-                <i class="fa-solid fa-shapes" style="color:#1d4ed8;"></i> Logo Website (Header & Footer)
-              </label>
-              <p style="font-size:0.82rem; color:#64748b; margin-bottom:14px;">Ganti logo simbol inisial "M" dengan gambar logo usaha Anda sendiri (PNG transparan sangat disarankan).</p>
+            <div class="form-field-group" style="background:#f8fafc; padding:20px; border-radius:8px; border:1px solid #cbd5e1; margin-bottom:24px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:10px;">
+                <label class="field-label" style="font-size:1rem; font-weight:800; color:#0f172a; margin:0; display:flex; align-items:center; gap:8px;">
+                  <i class="fa-solid fa-shapes" style="color:#1d4ed8;"></i> Logo Website (Header & Footer)
+                </label>
+                <button type="button" class="btn btn-primary btn-sm" onclick="openAdminLogoModal()" style="background:#2563eb; font-weight:700;">
+                  <i class="fa-solid fa-up-right-from-square"></i> Buka Jendela Ganti Logo
+                </button>
+              </div>
+              <p style="font-size:0.84rem; color:#64748b; margin-bottom:16px;">Ganti simbol inisial "M" dengan file logo grafis / PNG transparan Mizela Design Studio.</p>
               
-              <!-- Logo Preview Box -->
-              <div style="display:flex; align-items:center; gap:16px; margin-bottom:14px;">
-                <div id="admin-logo-preview-box" style="min-width:76px; height:50px; background:#fff; border:1px solid #cbd5e1; border-radius:6px; display:flex; align-items:center; justify-content:center; padding:4px 12px;">
+              <!-- Logo Preview & Action Buttons -->
+              <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; flex-wrap:wrap;">
+                <div id="admin-logo-preview-box" style="min-width:80px; height:52px; background:#fff; border:1px solid #cbd5e1; border-radius:6px; display:flex; align-items:center; justify-content:center; padding:4px 12px;">
                   <div class="brand-symbol" style="width:36px; height:36px; font-size:1.1rem;">M</div>
                 </div>
-                <div>
-                  <button type="button" class="btn btn-outline btn-sm" onclick="handleRemoveLogo()" style="color:#dc2626; border-color:#fca5a5; font-size:0.78rem;">
-                    <i class="fa-solid fa-trash-can"></i> Hapus / Gunakan Simbol Inisial "M"
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                  <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('admin-logo-file-picker').click()" style="background:#2563eb; font-weight:700;">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Tombol Pilih File Logo
+                  </button>
+                  <button type="button" class="btn btn-outline btn-sm" onclick="handleRemoveLogo()" style="color:#dc2626; border-color:#fca5a5; font-size:0.8rem;">
+                    <i class="fa-solid fa-trash-can"></i> Hapus / Reset ke Inisial "M"
                   </button>
                 </div>
               </div>
 
-              <!-- Upload File Logo -->
-              <div class="clean-upload-zone" onclick="document.getElementById('admin-logo-file-picker').click()" style="padding:14px;">
+              <!-- Upload File Logo Zone -->
+              <div class="clean-upload-zone" onclick="document.getElementById('admin-logo-file-picker').click()" style="padding:14px; margin-bottom:14px;">
                 <div class="upload-icon-small" style="width:34px; height:34px; font-size:1rem;"><i class="fa-solid fa-cloud-arrow-up"></i></div>
-                <div class="upload-main-text" style="font-size:0.86rem;">Klik untuk Unggah File Logo Baru</div>
-                <div class="upload-sub-text" style="font-size:0.75rem;">Format PNG Transparan, JPG, WEBP (Otomatis dioptimasi)</div>
+                <div class="upload-main-text" style="font-size:0.88rem;">Atau Klik di Area Ini untuk Unggah File Logo</div>
+                <div class="upload-sub-text" style="font-size:0.75rem;">Format PNG Transparan, JPG, WEBP (Otomatis dikompres)</div>
                 <input type="file" id="admin-logo-file-picker" accept="image/*" style="display:none;" onchange="handleAdminLogoFileSelect(event)">
               </div>
 
               <!-- URL Logo Alternatif -->
-              <div style="margin-top:10px;">
-                <label class="field-label" for="setting-logo-url" style="font-size:0.8rem;">Atau Masukkan URL Gambar Logo (Alternatif):</label>
+              <div>
+                <label class="field-label" for="setting-logo-url" style="font-size:0.82rem;">Atau Masukkan URL Gambar Logo (Alternatif):</label>
                 <input type="url" id="setting-logo-url" class="field-input" placeholder="https://domain.com/logo-mizela.png" oninput="handleLogoUrlInput(this.value)">
               </div>
             </div>
@@ -429,6 +458,55 @@
         </div>
       </section>
 
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       MODAL: GANTI LOGO WEBSITE (HEADER & FOOTER)
+       =================================================================== -->
+  <div id="admin-logo-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 520px;">
+      <div class="modal-head">
+        <h3><i class="fa-solid fa-shapes" style="color: #1d4ed8;"></i> Ganti Logo Website</h3>
+        <button class="modal-close-icon" onclick="closeAdminLogoModal()">&times;</button>
+      </div>
+      <div class="modal-content-body">
+        
+        <div style="text-align: center; margin-bottom: 20px; padding: 18px; background: #f8fafc; border-radius: 8px; border: 1px dashed #cbd5e1;">
+          <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 10px; font-weight: 600;">Pratinjau Logo Saat Ini:</p>
+          <div id="modal-logo-preview" style="display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 6px 16px; background: #fff; border-radius: 6px; border: 1px solid #e2e8f0; max-width: 240px;">
+            <div class="brand-symbol" style="width: 38px; height: 38px; font-size: 1.15rem;">M</div>
+          </div>
+        </div>
+
+        <div class="form-field-group">
+          <label class="field-label" style="font-weight: 700; color: #0f172a;">1. Pilih File Gambar Logo dari Komputer / HP</label>
+          <button type="button" class="btn btn-primary" style="width: 100%; padding: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; background: #2563eb;" onclick="document.getElementById('modal-logo-file-picker').click()">
+            <i class="fa-solid fa-cloud-arrow-up"></i> KLIK DI SINI: PILIH FILE GAMBAR LOGO
+          </button>
+          <input type="file" id="modal-logo-file-picker" accept="image/*" style="display:none;" onchange="handleModalLogoFileSelect(event)">
+          <span class="field-help" style="margin-top: 6px; display: block;">Format didukung: PNG (Transparan sangat direkomendasikan), JPG, SVG, WebP.</span>
+        </div>
+
+        <div class="form-field-group" style="margin-top: 18px;">
+          <label class="field-label" for="modal-logo-url" style="font-weight: 700; color: #0f172a;">2. Atau Masukkan URL Gambar Logo Online</label>
+          <input type="url" id="modal-logo-url" class="field-input" placeholder="https://domain.com/logo-mizela.png" oninput="handleModalLogoUrlInput(this.value)">
+          <span class="field-help">Jika logo sudah diupload di hosting lain / Google Drive direct link.</span>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; border-top: 1px solid #e2e8f0; padding-top: 16px; flex-wrap: wrap; gap: 10px;">
+          <button type="button" class="btn btn-outline btn-sm" onclick="handleRemoveLogoInModal()" style="color: #dc2626; border-color: #fca5a5;">
+            <i class="fa-solid fa-trash-can"></i> Hapus / Reset ke Inisial "M"
+          </button>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn btn-outline" onclick="closeAdminLogoModal()">Batal</button>
+            <button type="button" class="btn btn-primary" onclick="handleSaveLogoModal()" style="background: #2563eb; font-weight: 700;">
+              <i class="fa-solid fa-floppy-disk"></i> Simpan & Terapkan Logo
+            </button>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 
