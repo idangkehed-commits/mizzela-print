@@ -378,6 +378,7 @@ let state = {
 // APP INITIALIZATION
 // ===================================================================
 document.addEventListener('DOMContentLoaded', () => {
+  loadBusinessSettings();
   initOperationalStatus();
   initNavigation();
   initCatalogView();
@@ -385,6 +386,52 @@ document.addEventListener('DOMContentLoaded', () => {
   initGalleryView();
   initCart();
 });
+
+function loadBusinessSettings() {
+  const saved = localStorage.getItem('mizzela_business_settings');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      if (parsed.businessName) CONFIG.businessName = parsed.businessName;
+      if (parsed.studioName) CONFIG.studioName = parsed.studioName;
+      if (parsed.whatsappNumber) CONFIG.whatsappNumber = parsed.whatsappNumber;
+      if (parsed.phoneNumber) CONFIG.phoneNumber = parsed.phoneNumber;
+      if (parsed.instagramHandle) CONFIG.instagramHandle = parsed.instagramHandle;
+      if (parsed.instagramUrl) CONFIG.instagramUrl = parsed.instagramUrl;
+      if (parsed.address) CONFIG.address = parsed.address;
+      if (parsed.operationalHours) CONFIG.operationalHours = parsed.operationalHours;
+      applySettingsToDOM();
+    } catch (e) {}
+  }
+}
+
+function applySettingsToDOM() {
+  // Update brand name
+  document.querySelectorAll('.brand-title').forEach(el => {
+    const parts = CONFIG.businessName.split('&');
+    if (parts.length > 1) {
+      el.innerHTML = `${parts[0].trim()} <span>& ${parts[1].trim()}</span>`;
+    } else {
+      el.innerText = CONFIG.businessName;
+    }
+  });
+
+  // Update brand subtitle
+  document.querySelectorAll('.brand-subtitle').forEach(el => {
+    el.innerText = CONFIG.studioName;
+  });
+
+  // Update WhatsApp links
+  document.querySelectorAll('a[href*="wa.me"]').forEach(el => {
+    el.href = `https://wa.me/${CONFIG.whatsappNumber}`;
+  });
+
+  // Update Instagram links
+  document.querySelectorAll('a[href*="instagram.com"]').forEach(el => {
+    el.href = CONFIG.instagramUrl;
+    el.innerHTML = `<i class="fa-brands fa-instagram"></i> ${CONFIG.instagramHandle}`;
+  });
+}
 
 // Update Workshop Live Status (Senin - Sabtu: 08:30 - 20:00, Minggu: 10:00 - 17:00)
 function initOperationalStatus() {
@@ -1261,12 +1308,19 @@ function initGalleryView() {
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
-      state.gallery = [...parsed, ...DEFAULT_GALLERY];
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        state.gallery = parsed;
+      } else {
+        state.gallery = [...DEFAULT_GALLERY];
+      }
     } catch (e) {
       state.gallery = [...DEFAULT_GALLERY];
     }
   } else {
     state.gallery = [...DEFAULT_GALLERY];
+    try {
+      localStorage.setItem('mizzela_user_gallery', JSON.stringify(DEFAULT_GALLERY));
+    } catch (e) {}
   }
 
   renderGalleryGrid('all');

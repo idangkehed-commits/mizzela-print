@@ -439,15 +439,10 @@
   <section id="view-gallery" class="main-view-pane">
     <div class="container" style="padding-top: 24px;">
       
-      <div class="section-head" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;">
-        <div>
-          <span class="section-tag">Dokumentasi Produksi Nyata</span>
-          <h2 class="section-heading">Galeri Portofolio Cetak</h2>
-          <p class="section-lead">Hasil cetak sablon cup, apparel DTF, dan merchandise akrilik pesanan mitra kami di Bandung.</p>
-        </div>
-        <button class="btn btn-accent" onclick="openAddPhotoModal()">
-          <i class="fa-solid fa-plus"></i> Unggah Foto Karya Baru
-        </button>
+      <div class="section-head">
+        <span class="section-tag">Dokumentasi Produksi Nyata</span>
+        <h2 class="section-heading">Galeri Portofolio Cetak</h2>
+        <p class="section-lead">Hasil cetak sablon cup, apparel DTF, dan merchandise akrilik pesanan mitra kami di Bandung.</p>
       </div>
 
       <!-- Filter Chips -->
@@ -460,7 +455,7 @@
           <button class="filter-chip-btn" data-filter="kemasan">Kemasan & Stiker</button>
         </div>
         <div style="font-size:0.84rem; color:#64748b;">
-          Foto yang Anda tambahkan otomatis tersimpan di browser Anda.
+          Dokumentasi pengerjaan asli dari workshop Mizzelaa & Print.
         </div>
       </div>
 
@@ -739,70 +734,6 @@
     </div>
   </div>
 
-  <!-- ===================================================================
-       MODAL 3: UNGGAH FOTO KARYA BARU KE GALERI
-       =================================================================== -->
-  <div id="add-photo-modal" class="modal-overlay">
-    <div class="modal-box">
-      <div class="modal-head">
-        <h3><i class="fa-solid fa-camera" style="color:#1d4ed8;"></i> Unggah Foto Hasil Cetak Baru</h3>
-        <button class="modal-close-icon" onclick="closeAddPhotoModal()">&times;</button>
-      </div>
-      <div class="modal-content-body">
-        <form id="add-photo-form" onsubmit="saveNewGalleryPhoto(event)">
-          
-          <div class="form-field-group">
-            <label class="field-label">Pilih Foto dari Perangkat <span class="field-help">(File tersimpan di browser)</span></label>
-            <div class="clean-upload-zone" onclick="document.getElementById('new-gallery-file').click()">
-              <div class="upload-icon-small"><i class="fa-solid fa-image"></i></div>
-              <div class="upload-main-text">Klik untuk Memilih File Foto</div>
-              <div class="upload-sub-text">Format PNG, JPG, WEBP</div>
-              <input type="file" id="new-gallery-file" accept="image/*" style="display:none;" onchange="handleGalleryPhotoUpload(event)">
-            </div>
-            <img id="gallery-photo-preview" src="" alt="Preview" style="display:none; max-height:160px; margin:12px auto 0 auto; border-radius:6px; border:1px solid #e2e8f0;">
-          </div>
-
-          <div class="form-field-group">
-            <label class="field-label">Atau Masukkan URL Gambar (Opsional)</label>
-            <input type="url" id="photo-url-fallback" class="field-input" placeholder="https://domain.com/foto-hasil-cetak.jpg">
-          </div>
-
-          <div class="form-field-group">
-            <label class="field-label">Judul Hasil Cetak <span style="color:#dc2626;">*</span></label>
-            <input type="text" id="photo-title" class="field-input" placeholder="Contoh: Sablon Cup 14oz Oval Kopi Senja" required>
-          </div>
-
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-            <div class="form-field-group">
-              <label class="field-label">Kategori</label>
-              <select id="photo-category" class="field-select">
-                <option value="cup">Cup Minuman</option>
-                <option value="baju">Sablon Baju</option>
-                <option value="flat">Benda Datar & Akrilik</option>
-                <option value="kemasan">Stiker & Kemasan</option>
-              </select>
-            </div>
-            <div class="form-field-group">
-              <label class="field-label">Nama Klien / Brand</label>
-              <input type="text" id="photo-client" class="field-input" placeholder="Contoh: Senja Coffee Roaster">
-            </div>
-          </div>
-
-          <div class="form-field-group">
-            <label class="field-label">Deskripsi Pengerjaan</label>
-            <textarea id="photo-desc" class="field-textarea" rows="2" placeholder="Contoh: Sablon 1 warna hitam doff, pengerjaan 1.000 pcs selesai 3 hari."></textarea>
-          </div>
-
-          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
-            <button type="button" class="btn btn-outline" onclick="closeAddPhotoModal()">Batal</button>
-            <button type="submit" class="btn btn-primary">
-              <i class="fa-solid fa-floppy-disk"></i> Simpan ke Galeri
-            </button>
-          </div>
-
-        </form>
-      </div>
-    </div>
   </div>
 
   <!-- ===================================================================
@@ -876,8 +807,11 @@
         <div>
           &copy; 2026 <strong>Mizzelaa & Print</strong> bersama <strong>Mizela Design Studio</strong>. Seluruh Hak Cipta Dilindungi.
         </div>
-        <div>
-          Digital Printing Bandung &bull; Sablon Cup &bull; DTF Apparel &bull; UV Flatbed
+        <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+          <span>Digital Printing Bandung &bull; Sablon Cup &bull; DTF Apparel &bull; UV Flatbed</span>
+          <a href="admin.html" style="color:#64748b; font-weight:600; display:inline-flex; align-items:center; gap:5px;" title="Login Admin Mizzelaa">
+            <i class="fa-solid fa-lock"></i> Portal Admin
+          </a>
         </div>
       </div>
     </div>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Admin | Mizzelaa & Print x Mizela Design Studio</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Shared Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body style="background-color: #f1f5f9;">
+
+  <!-- ===================================================================
+       1. LOGIN VIEW (DITAMPILKAN JIKA BELUM LOGIN)
+       =================================================================== -->
+  <div id="admin-login-view" class="admin-login-wrapper">
+    <div class="admin-login-box">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div class="brand-symbol" style="margin: 0 auto 12px auto;">M</div>
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: #0f172a;">Portal Admin Percetakan</h2>
+        <p style="font-size: 0.86rem; color: #64748b; margin-top: 4px;">Mizzelaa & Print x Mizela Design Studio</p>
+      </div>
+
+      <div class="admin-hint-callout">
+        <i class="fa-solid fa-circle-info" style="font-size: 1.1rem; color: #1d4ed8; margin-top: 2px;"></i>
+        <div>
+          <strong>Akun Bawaan (Default):</strong><br>
+          Username: <code style="background: #dbeafe; padding: 2px 6px; border-radius: 4px;">admin</code> &bull; Password: <code style="background: #dbeafe; padding: 2px 6px; border-radius: 4px;">admin123</code>
+        </div>
+      </div>
+
+      <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
+        <div class="form-field-group">
+          <label class="field-label" for="login-username">Username Admin</label>
+          <input type="text" id="login-username" class="field-input" placeholder="Masukkan username" required value="admin">
+        </div>
+
+        <div class="form-field-group">
+          <label class="field-label" for="login-password">Password</label>
+          <input type="password" id="login-password" class="field-input" placeholder="Masukkan password" required value="admin123">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 13px; font-weight: 700; margin-top: 10px;">
+          <i class="fa-solid fa-right-to-bracket"></i> Masuk ke Dashboard
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 24px; border-top: 1px solid #e2e8f0; padding-top: 16px;">
+        <a href="index.html" style="font-size: 0.86rem; color: #1d4ed8; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-arrow-left"></i> Kembali ke Website Utama
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       2. DASHBOARD VIEW (DITAMPILKAN SETELAH LOGIN)
+       =================================================================== -->
+  <div id="admin-dashboard-view" class="admin-dashboard-wrap" style="display: none;">
+    <div class="container">
+      
+      <!-- Top Bar Admin -->
+      <header class="admin-top-nav">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div class="brand-symbol" style="width: 40px; height: 40px; font-size: 1.2rem;">M</div>
+          <div>
+            <h2 id="admin-header-title" style="font-size: 1.2rem; font-weight: 800; color: #0f172a; line-height: 1.2;">Mizzelaa & Print &mdash; Panel Admin</h2>
+            <div style="font-size: 0.78rem; color: #64748b;">
+              Status: <span class="admin-badge-pill"><i class="fa-solid fa-circle-check"></i> Terautentikasi (<span id="current-username-badge">admin</span>)</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <a href="index.html" target="_blank" class="btn btn-outline btn-sm">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Website Utama
+          </a>
+          <button onclick="handleAdminLogout()" class="btn btn-outline btn-sm" style="color: #dc2626; border-color: #fca5a5;">
+            <i class="fa-solid fa-right-from-bracket"></i> Keluar
+          </button>
+        </div>
+      </header>
+
+      <!-- Admin Menu Tabs -->
+      <div class="admin-menu-tabs">
+        <button class="admin-tab-btn active" data-tab="gallery" onclick="switchAdminTab('gallery')">
+          <i class="fa-solid fa-images"></i> Kelola Galeri Foto (<span id="stat-total-photos">0</span>)
+        </button>
+        <button class="admin-tab-btn" data-tab="settings" onclick="switchAdminTab('settings')">
+          <i class="fa-solid fa-sliders"></i> Pengaturan Informasi Bisnis
+        </button>
+        <button class="admin-tab-btn" data-tab="security" onclick="switchAdminTab('security')">
+          <i class="fa-solid fa-shield-halved"></i> Ganti Password & Akun
+        </button>
+      </div>
+
+      <!-- PANE 1: KELOLA GALERI FOTO -->
+      <section id="admin-pane-gallery" class="admin-content-pane active">
+        <div class="admin-panel-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 24px; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px;">
+            <div>
+              <h3 style="font-size: 1.2rem; font-weight: 700; color: #0f172a;">Daftar Foto Portofolio Hasil Cetak</h3>
+              <p style="font-size: 0.86rem; color: #64748b;">Tambah foto karya baru, pratinjau, atau hapus foto dari galeri publik.</p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn btn-outline btn-sm" onclick="resetGalleryToDefault()">
+                <i class="fa-solid fa-rotate-left"></i> Reset ke Galeri Bawaan
+              </button>
+              <button class="btn btn-accent btn-sm" onclick="openAdminAddPhotoModal()">
+                <i class="fa-solid fa-plus"></i> + Unggah Foto Karya Baru
+              </button>
+            </div>
+          </div>
+
+          <!-- Grid Foto Admin -->
+          <div id="admin-photos-grid" class="admin-photo-table-grid">
+            <!-- Rendered by admin.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- PANE 2: PENGATURAN INFORMASI BISNIS -->
+      <section id="admin-pane-settings" class="admin-content-pane">
+        <div class="admin-panel-card" style="max-width: 720px; margin: 0 auto;">
+          <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 6px;">Pengaturan Profil Usaha & Kontak</h3>
+          <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 24px;">Perubahan di sini langsung tersinkronisasi ke seluruh halaman website utama (Header, WhatsApp, Alamat & Footer).</p>
+
+          <form id="admin-business-form" onsubmit="handleSaveBusinessSettings(event)">
+            <div class="form-field-group">
+              <label class="field-label" for="setting-business-name">Nama Usaha Percetakan</label>
+              <input type="text" id="setting-business-name" class="field-input" placeholder="Mizzelaa & Print" required>
+            </div>
+
+            <div class="form-field-group">
+              <label class="field-label" for="setting-studio-name">Nama Studio Desain</label>
+              <input type="text" id="setting-studio-name" class="field-input" placeholder="Mizela Design Studio" required>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div class="form-field-group">
+                <label class="field-label" for="setting-phone">Nomor Telepon / WhatsApp CS</label>
+                <input type="text" id="setting-phone" class="field-input" placeholder="0877-2757-7451" required>
+                <span class="field-help">Format: 0877-2757-7451 atau 08xxxx</span>
+              </div>
+              <div class="form-field-group">
+                <label class="field-label" for="setting-instagram">Username Instagram</label>
+                <input type="text" id="setting-instagram" class="field-input" placeholder="@mizela_design_studio" required>
+              </div>
+            </div>
+
+            <div class="form-field-group">
+              <label class="field-label" for="setting-address">Alamat Lengkap Workshop</label>
+              <textarea id="setting-address" class="field-textarea" rows="2" placeholder="Jl. Bojongloa, Kopo, Kec. Bojongloa Kaler, Kota Bandung, Jawa Barat 40233" required></textarea>
+            </div>
+
+            <div class="form-field-group">
+              <label class="field-label" for="setting-hours">Jam Operasional</label>
+              <input type="text" id="setting-hours" class="field-input" placeholder="Senin - Sabtu: 08:30 - 20:00 WIB | Minggu: 10:00 - 17:00 WIB">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="padding: 13px 26px; font-weight: 700;">
+              <i class="fa-solid fa-floppy-disk"></i> Simpan Pengaturan Bisnis
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- PANE 3: GANTI AKUN & PASSWORD -->
+      <section id="admin-pane-security" class="admin-content-pane">
+        <div class="admin-panel-card" style="max-width: 540px; margin: 0 auto;">
+          <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 6px;">Ganti Password & Akun Admin</h3>
+          <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 24px;">Perbarui kata sandi dan nama pengguna admin untuk keamanan akses.</p>
+
+          <form id="admin-password-form" onsubmit="handleChangeAdminPassword(event)">
+            <div class="form-field-group">
+              <label class="field-label" for="security-new-username">Username Admin</label>
+              <input type="text" id="security-new-username" class="field-input" required>
+            </div>
+
+            <div class="form-field-group">
+              <label class="field-label" for="security-current-password">Password Saat Ini (Lama) <span style="color: #dc2626;">*</span></label>
+              <input type="password" id="security-current-password" class="field-input" placeholder="Masukkan password lama" required>
+            </div>
+
+            <div class="form-field-group">
+              <label class="field-label" for="security-new-password">Password Baru <span style="color: #dc2626;">*</span></label>
+              <input type="password" id="security-new-password" class="field-input" placeholder="Minimal 4 karakter" required minlength="4">
+            </div>
+
+            <div class="form-field-group">
+              <label class="field-label" for="security-confirm-password">Ulangi Password Baru <span style="color: #dc2626;">*</span></label>
+              <input type="password" id="security-confirm-password" class="field-input" placeholder="Ulangi password baru" required minlength="4">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="padding: 13px 26px; font-weight: 700;">
+              <i class="fa-solid fa-key"></i> Perbarui Akun & Password
+            </button>
+          </form>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       MODAL: UNGGAH FOTO HASIL CETAK DI ADMIN
+       =================================================================== -->
+  <div id="admin-add-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 600px;">
+      <div class="modal-head">
+        <h3><i class="fa-solid fa-camera" style="color: #1d4ed8;"></i> Unggah Foto Hasil Cetak Baru</h3>
+        <button class="modal-close-icon" onclick="closeAdminAddPhotoModal()">&times;</button>
+      </div>
+      <div class="modal-content-body">
+        <form id="admin-add-photo-form" onsubmit="handleAdminSubmitPhoto(event)">
+          
+          <div class="form-field-group">
+            <label class="field-label">Pilih Foto dari Komputer / HP</label>
+            <div class="clean-upload-zone" onclick="document.getElementById('admin-file-picker').click()">
+              <div class="upload-icon-small"><i class="fa-solid fa-image"></i></div>
+              <div class="upload-main-text">Klik untuk Memilih File Foto</div>
+              <div class="upload-sub-text">Format PNG, JPG, WEBP (Otomatis dikompres)</div>
+              <input type="file" id="admin-file-picker" accept="image/*" style="display:none;" onchange="handleAdminPhotoFileSelect(event)">
+            </div>
+            <img id="admin-upload-preview" src="" alt="Preview Upload" style="display:none; max-height:160px; margin:12px auto 0 auto; border-radius:6px; border:1px solid #e2e8f0;">
+          </div>
+
+          <div class="form-field-group">
+            <label class="field-label" for="admin-photo-url-input">Atau Masukkan URL Gambar (Alternatif)</label>
+            <input type="url" id="admin-photo-url-input" class="field-input" placeholder="https://domain.com/foto-karya.jpg">
+          </div>
+
+          <div class="form-field-group">
+            <label class="field-label" for="admin-photo-title">Judul Karya / Produk <span style="color:#dc2626;">*</span></label>
+            <input type="text" id="admin-photo-title" class="field-input" placeholder="Contoh: Sablon Cup 16oz Slim Kopi Sudut" required>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div class="form-field-group">
+              <label class="field-label" for="admin-photo-cat">Kategori</label>
+              <select id="admin-photo-cat" class="field-select">
+                <option value="cup">Cup Minuman</option>
+                <option value="baju">Sablon Baju / DTF</option>
+                <option value="flat">Benda Datar & Akrilik</option>
+                <option value="kemasan">Stiker & Kemasan</option>
+              </select>
+            </div>
+            <div class="form-field-group">
+              <label class="field-label" for="admin-photo-client">Nama Klien / Brand</label>
+              <input type="text" id="admin-photo-client" class="field-input" placeholder="Contoh: Kopi Sudut Bandung">
+            </div>
+          </div>
+
+          <div class="form-field-group">
+            <label class="field-label" for="admin-photo-desc">Deskripsi Pengerjaan</label>
+            <textarea id="admin-photo-desc" class="field-textarea" rows="2" placeholder="Jelaskan spesifikasi bahan, teknik sablon, dan detail hasil akhir..."></textarea>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px; border-top:1px solid #e2e8f0; padding-top:16px;">
+            <button type="button" class="btn btn-outline" onclick="closeAdminAddPhotoModal()">Batal</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Simpan ke Galeri Publik
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-clean-container"></div>
+
+  <!-- Admin Script -->
+  <script src="admin.js"></script>
+</body>
+</html>
